@@ -200,14 +200,14 @@ address{font-style:normal;}
 .contact-email{font-size:12px;display:block;white-space:nowrap;}
 .contact-phone{display:block;font-size:11px;margin-top:12px;}
 .contact-email:hover,.contact-phone:hover{color:#94714c;}
-.site-footer{border-top:1px solid var(--line);padding-top:29px;padding-bottom:25px;overflow:hidden;}
-.footer-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;}
+.site-footer{background:var(--ink);color:var(--ivory);border-top:1px solid rgba(235,219,194,.2);padding-top:29px;padding-bottom:25px;overflow:hidden;}
+.footer-top{display:flex;justify-content:space-between;align-items:center;color:var(--ivory);font-size:10px;}
 .back-to-top{display:flex;align-items:center;gap:18px;min-height:44px;}
 .back-to-top>svg{width:18px;height:18px;transform:rotate(180deg);}
-.footer-bottom{margin-top:24px;display:flex;justify-content:space-between;gap:24px;font-size:8px;letter-spacing:.045em;color:var(--muted);align-items:center;}
+.footer-bottom{margin-top:24px;display:flex;justify-content:space-between;gap:24px;font-size:8px;letter-spacing:.045em;color:#d0c4b5;align-items:center;}
 .footer-bottom>div{display:flex;gap:9px;}
-.footer-bottom a{padding:10px 2px;opacity:.5;}
-.footer-bottom a[aria-current]{opacity:1;}
+.footer-bottom a{padding:10px 2px;color:var(--ivory);transition:color .2s;}
+.site-footer a:hover,.footer-bottom a[aria-current]{color:#e0c8a2;}
 
 /* Product and inquiry dialogs */
 dialog{color:var(--ink);background:var(--ivory);border:0;max-height:90svh;box-shadow:0 20px 120px #0004;}
