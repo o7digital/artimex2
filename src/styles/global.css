@@ -42,15 +42,15 @@ address{font-style:normal;}
 .brand-name{font-family:var(--serif);font-size:35px;letter-spacing:.11em;line-height:1.02;}
 .brand-subtitle{font-size:6.8px;letter-spacing:.205em;line-height:2.2;}
 .desktop-nav{display:flex;align-items:center;gap:32px;margin-left:35px;}
-.desktop-nav a{position:relative;font-size:18px;font-weight:500;letter-spacing:.035em;padding:12px 0;}
+.desktop-nav a{position:relative;font-size:15px;font-weight:400;letter-spacing:.025em;padding:12px 0;}
 .desktop-nav a::after{content:'';position:absolute;bottom:7px;left:0;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s;}
 .desktop-nav a:hover::after{transform:scaleX(1);}
 .header-right{display:flex;align-items:center;gap:32px;}
-.language-switch{display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.05em;}
+.language-switch{display:flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.05em;}
 .language-switch a{padding:15px 2px;opacity:.55;}
 .language-switch a[aria-current],.language-switch a:hover{opacity:1;}
 .language-switch span{opacity:.3;}
-.header-business{display:flex;align-items:center;gap:21px;border:1px solid rgba(244,240,232,.45);padding:13px 17px;font-size:16px;font-weight:500;transition:background .2s;}
+.header-business{display:flex;align-items:center;gap:21px;border:1px solid rgba(244,240,232,.45);padding:13px 17px;font-size:14px;font-weight:400;transition:background .2s;}
 .header-business svg{width:18px;height:18px;}
 .header-business:hover{background:rgba(255,255,255,.13);}
 .is-scrolled .header-business{border-color:var(--line);}
