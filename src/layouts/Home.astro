@@ -11,6 +11,7 @@ import Hero from '../components/Hero';
 import Collection from '../components/Collection';
 import Contact from '../components/Contact.astro';
 import Icon from '../components/Icon.astro';
+import Story from '../components/Story.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -38,14 +39,7 @@ const t = copy[locale];
         <div class="intro-foot reveal"><span /><Icon name="wheat" /><span /></div>
         <p class="intro-note reveal">{t.intro.note}</p>
       </section>
-      <section class="story-section section-wrap" id="story">
-        <div class="story-photo reveal">
-          <img src="/images/atelier.webp" alt={locale === 'es' ? 'Manos trabajando la masa sobre una mesa de madera; imagen ilustrativa del oficio panadero.' : 'Hands shaping dough on a wooden table; an illustrative image of the baker’s craft.'} width="960" height="1200" loading="lazy" decoding="async" />
-          <span class="photo-caption">{t.story.caption}</span>
-          <div class="artisan-stamp"><span>{t.story.stamp[0]}</span><Icon name="wheat" /><span>{t.story.stamp[1]}</span></div>
-        </div>
-        <div class="story-copy reveal"><p class="eyebrow">{t.story.eyebrow}</p><h2>{t.story.first}<br /><em>{t.story.second}</em></h2><p>{t.story.body}</p><p>{t.story.body2}</p><a class="text-link" href="#collection">{t.story.link}<Icon /></a><span class="story-signature" aria-hidden="true">Artimex</span></div>
-      </section>
+      <Story locale={locale} />
       <section class="collection-section section-wrap" id="collection">
         <div class="section-heading reveal"><div><p class="eyebrow">{t.collection.eyebrow}</p><h2>{t.collection.first}<br /><em>{t.collection.second}</em></h2></div><p>{t.collection.body}</p></div>
         <Collection locale={locale} client:visible />
