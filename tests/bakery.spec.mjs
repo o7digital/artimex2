@@ -7,9 +7,9 @@ for (const width of [1440, 768, 390, 320]) {
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
-    await page.goto('/');
+    await page.goto('/box/');
     await page.evaluate(() => document.fonts.ready);
-    await expect(page).toHaveTitle('Artimex Bakery — Panadería California');
+    await expect(page).toHaveTitle('Artimex Bakery — Concha box demo');
     expect(await page.evaluate(() => document.fonts.check('32px Italiana') && document.fonts.check('14px "DM Sans"'))).toBe(true);
     await expect.poll(() => page.evaluate(() => [...document.images].every(image => image.complete && image.naturalWidth > 0))).toBe(true);
     const overflow = await page.evaluate(() => [...document.querySelectorAll('#masa-preview *')].filter(element => {

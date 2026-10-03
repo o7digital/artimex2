@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+import { copy, type Locale } from '../data/content';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = copy[locale].nav;
+---
+<header class="site-header" id="site-header">
+  <a class="brand" href="#top" aria-label="Artimex Bakery">
+    <Icon name="wheat" class="brand-mark" />
+    <span><span class="brand-name">ARTIMEX</span><span class="brand-subtitle">ARTISAN MEXICAN BAKERY</span></span>
+  </a>
+  <nav class="desktop-nav" aria-label={locale === 'es' ? 'Navegación principal' : 'Main navigation'}>
+    <a href="#collection">{t.collection}</a><a href="#story">{t.story}</a><a href="#contact">{t.contact}</a>
+  </nav>
+  <div class="header-right">
+    <div class="language-switch" aria-label={locale === 'es' ? 'Idioma' : 'Language'}>
+      <a href="/es/" lang="es" hreflang="es" aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a>
+    </div>
+    <a class="header-business" href="#business">{t.business}<Icon /></a>
+    <button class="menu-toggle" id="menu-toggle" aria-controls="mobile-menu" aria-expanded="false" aria-label={t.menu} data-open-label={t.menu} data-close-label={t.close}><span /><span /></button>
+  </div>
+  <nav class="mobile-menu" id="mobile-menu" hidden aria-label={locale === 'es' ? 'Navegación móvil' : 'Mobile navigation'}>
+    <span class="eyebrow">ARTIMEX BAKERY</span>
+    <a href="#collection"><span>01</span>{t.collection}<Icon /></a>
+    <a href="#story"><span>02</span>{t.story}<Icon /></a>
+    <a href="#business"><span>03</span>{t.business}<Icon /></a>
+    <a href="#contact"><span>04</span>{t.contact}<Icon /></a>
+    <p class="mobile-menu-note">{copy[locale].footer.tagline}</p>
+  </nav>
+</header>
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const main = document.querySelector('main');
+  const footer = document.querySelector('footer');
+  const setMenu = (open: boolean, restoreFocus = true) => {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) || 'Menu');
+    menu.hidden = !open;
+    document.body.classList.toggle('menu-open', open);
+    if (main) main.inert = open;
+    if (footer) footer.inert = open;
+    if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
+    else if (restoreFocus) toggle.focus();
+  };
+  toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false, false)));
+  document.addEventListener('keydown', (event) => {
+    if (toggle?.getAttribute('aria-expanded') !== 'true') return;
+    if (event.key === 'Escape') setMenu(false);
+    if (event.key === 'Tab') {
+      const links = Array.from(header?.querySelectorAll<HTMLElement>('.brand, .language-switch a, .menu-toggle, .mobile-menu a') || []);
+      const first = links[0]; const last = links[links.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    }
+  });
+  const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 50);
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+  window.matchMedia('(min-width: 1001px)').addEventListener('change', (event) => { if (event.matches && toggle?.getAttribute('aria-expanded') === 'true') setMenu(false, false); });
+  document.querySelectorAll<HTMLAnchorElement>('.language-switch a').forEach((link) => {
+    link.addEventListener('click', () => { if (window.location.hash) link.href += window.location.hash; });
+  });
+</script>
