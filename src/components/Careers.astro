@@ -1,0 +1,45 @@
+---
+import { brand, copy, type Locale } from '../data/content';
+import { privacyPaths } from '../data/privacyNotice';
+import Icon from './Icon.astro';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = copy[locale].careers;
+const email = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}`;
+---
+<section class="careers-section section-wrap" id="careers" aria-labelledby="careers-title">
+  <figure class="careers-photo reveal">
+    <picture><source media="(max-width:700px)" srcset="/images/hero-hands-mobile.webp" /><img src="/images/hero-hands.webp" alt={t.photo} width="1672" height="941" loading="lazy" decoding="async" /></picture>
+    <figcaption><span class="eyebrow">{t.note}</span><p>{t.caption}</p></figcaption>
+  </figure>
+  <div class="careers-copy reveal">
+    <p class="eyebrow">{t.eyebrow}</p>
+    <h2 id="careers-title">{t.first}<br /><em>{t.second}</em></h2>
+    <p class="careers-description">{t.body}</p>
+    <a class="button button-dark careers-email" href={email}>{t.link}<Icon /></a>
+    <p class="careers-note">{t.resume}</p>
+    <a class="careers-privacy" href={privacyPaths[locale]}>{t.privacy}</a>
+  </div>
+</section>
+<style>
+  .careers-section{display:grid;grid-template-columns:1fr .88fr;gap:9.8vw;align-items:center;padding-top:104px;padding-bottom:104px;border-bottom:1px solid var(--line);}
+  .careers-photo{position:relative;min-width:0;margin:0;}
+  picture{display:block;}
+  .careers-photo img{width:100%;height:auto;aspect-ratio:4/4.3;object-fit:cover;object-position:76% center;}
+  .careers-photo::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(16,12,8,.85),transparent 55%);}
+  figcaption{position:absolute;left:28px;right:28px;bottom:28px;z-index:1;color:var(--ivory);}
+  figcaption>.eyebrow{color:#e0c8a2;font-size:8px;}
+  figcaption>p{max-width:360px;margin-top:12px;font-family:var(--serif);font-size:30px;line-height:1.15;}
+  .careers-copy{min-width:0;}
+  .careers-copy>.eyebrow{color:var(--muted);}
+  h2{font-size:clamp(48px,4.4vw,72px);line-height:1.02;letter-spacing:-.028em;margin-top:24px;}
+  h2 em{color:#887051;}
+  .careers-description{max-width:400px;font-size:14px;line-height:1.9;color:var(--muted);margin-top:26px;}
+  .careers-email{margin-top:30px;gap:28px;}
+  .careers-email svg{width:20px;height:20px;}
+  .careers-note{max-width:340px;font-size:11px;line-height:1.8;color:var(--muted);margin-top:18px;}
+  .careers-privacy{display:inline-block;font-size:11px;line-height:1.8;min-height:44px;padding:12px 0;text-decoration:underline;text-underline-offset:4px;}
+  .careers-privacy:hover{color:#887051;}
+  @media(max-width:1000px){.careers-section{gap:8vw;}.careers-photo img{aspect-ratio:4/5.5;}figcaption{left:22px;right:22px;bottom:22px;}figcaption>p{font-size:26px;}h2{font-size:48px;}.careers-description{font-size:13px;}}
+  @media(max-width:700px){.careers-section{grid-template-columns:1fr;gap:40px;padding-top:72px;padding-bottom:65px;}.careers-photo img{aspect-ratio:4/4.1;object-position:center;}h2{font-size:clamp(48px,11.5vw,66px);}.careers-copy>.eyebrow{font-size:8px;}.careers-description{max-width:480px;}.careers-email{font-size:11px;min-height:52px;}.careers-note{font-size:11px;}}
+</style>

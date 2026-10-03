@@ -10,7 +10,7 @@ const languages = page === 'privacy' ? privacyPaths : { es: '/es/', en: '/en/' }
 <footer class="site-footer section-wrap">
   <div class="footer-top"><span>{t.footer.tagline}</span><a href="#top" class="back-to-top">{t.location.top}<Icon name="down" /></a></div>
   <div class="footer-bottom">
-    <div class="footer-links"><a href="/box/">{locale === 'es' ? 'Compón tu caja · demo' : 'Build your box · demo'}</a><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
+    <div class="footer-links"><a href="/box/">{locale === 'es' ? 'Compón tu caja · demo' : 'Build your box · demo'}</a><a href={`/${locale}/#careers`}>{t.nav.careers}</a><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
     <span class="footer-rights">© {new Date().getFullYear()} {t.footer.rights}</span>
     <span class="footer-concept">{t.footer.concept}</span>
     <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
