@@ -55,7 +55,6 @@ const t = copy[locale];
     </main>
     <footer class="site-footer section-wrap">
       <div class="footer-top"><span>{t.footer.tagline}</span><a href="#top" class="back-to-top">{t.location.top}<Icon name="down" /></a></div>
-      <div class="footer-wordmark" aria-hidden="true">ARTIMEX</div>
       <div class="footer-bottom"><a href="/box/">{locale === "es" ? "Compón tu caja · demo" : "Build your box · demo"}</a><span>© {new Date().getFullYear()} {t.footer.rights}</span><span>{t.footer.concept}</span><div><a href="/es/" lang="es" aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div></div>
     </footer>
     <Contact locale={locale} />
