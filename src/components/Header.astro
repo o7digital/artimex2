@@ -61,7 +61,7 @@ const t = copy[locale].nav;
   const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 50);
   window.addEventListener('scroll', updateHeader, { passive: true });
   updateHeader();
-  window.matchMedia('(min-width: 1001px)').addEventListener('change', (event) => { if (event.matches && toggle?.getAttribute('aria-expanded') === 'true') setMenu(false, false); });
+  window.matchMedia('(min-width: 1201px)').addEventListener('change', (event) => { if (event.matches && toggle?.getAttribute('aria-expanded') === 'true') setMenu(false, false); });
   document.querySelectorAll<HTMLAnchorElement>('.language-switch a').forEach((link) => {
     link.addEventListener('click', () => { if (window.location.hash) link.href += window.location.hash; });
   });
