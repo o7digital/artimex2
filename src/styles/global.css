@@ -368,7 +368,8 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .site-footer .footer-bottom a{display:inline-flex;align-items:center;min-height:44px;}
 
 .artimex-logo{display:block;height:auto;}
-.footer-logo{width:210px;max-width:100%;}
+.footer-logo{width:140px;max-width:100%;}
+@media(max-width:700px){.footer-logo{width:110px;}}
 .contact-decoration .dialog-logo{width:180px;height:auto;max-width:100%;}
 .privacy-page{isolation:isolate;}
 .privacy-page .site-footer{position:relative;z-index:1;}
