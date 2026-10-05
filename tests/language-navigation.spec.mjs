@@ -5,8 +5,16 @@ const positionIn = (page, id) => page.locator(`#${id}`).evaluate(element => {
   return (offset - element.getBoundingClientRect().top) / element.offsetHeight;
 });
 
+const settlePage = async page => {
+  await page.waitForLoadState('load');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+};
+
 const readSection = async (page, id, progress = .25) => {
-  await page.evaluate(() => document.fonts.ready);
+  await settlePage(page);
   await page.locator(`#${id}`).evaluate((element, progress) => {
   const offset = document.querySelector('header').getBoundingClientRect().bottom + 24;
   scrollTo({ top: scrollY + element.getBoundingClientRect().top + element.offsetHeight * progress - offset, behavior: 'instant' });
@@ -52,6 +60,7 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(/\/es\/#site-footer$/);
     await expect(page.locator('.footer-languages')).toBeInViewport();
 
+    await settlePage(page);
     await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
     await page.locator('.language-switch a[lang="en"]').click();
     await expect(page).toHaveURL(/\/en\/$/);
