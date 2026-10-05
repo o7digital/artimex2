@@ -14,6 +14,7 @@ import Icon from '../components/Icon.astro';
 import Story from '../components/Story.astro';
 import Footer from '../components/Footer.astro';
 import Careers from '../components/Careers.astro';
+import Restaurants from '../components/Restaurants.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -48,7 +49,7 @@ const t = copy[locale];
       </section>
       <section class="business-section" id="business">
         <div class="business-texture" aria-hidden="true"><img src="/images/hero-bread.webp" width="1672" height="941" alt="" loading="lazy" /></div>
-        <div class="business-inner section-wrap"><div class="business-title reveal"><p class="eyebrow">{t.business.eyebrow}</p><h2>{t.business.first}<br /><em>{t.business.second}</em></h2><button class="button button-ivory" data-contact>{t.business.link}<Icon /></button></div><div class="business-copy reveal"><p>{t.business.body}</p><div class="business-list">{t.business.items.map((item, i) => <div><span>0{i + 1}</span><span>{item}</span><Icon /></div>)}</div><p class="business-note">{t.business.sub}</p></div></div>
+        <div class="business-inner section-wrap"><div class="business-title reveal"><p class="eyebrow">{t.business.eyebrow}</p><h2>{t.business.first}<br /><em>{t.business.second}</em></h2><button class="button button-ivory" data-contact>{t.business.link}<Icon /></button></div><div class="business-copy reveal"><p>{t.business.body}</p><div class="business-list">{t.business.items.map((item, i) => <div>{i === 0 ? <button type="button" data-restaurants aria-haspopup="dialog" aria-controls="restaurants-dialog"><span>0{i + 1}</span><span>{item}</span><Icon /></button> : <><span>0{i + 1}</span><span>{item}</span><Icon /></>}</div>)}</div><p class="business-note">{t.business.sub}</p></div></div>
       </section>
       <Careers locale={locale} />
       <section class="contact-section section-wrap" id="contact">
@@ -58,6 +59,7 @@ const t = copy[locale];
     </main>
     <Footer locale={locale} />
     <Contact locale={locale} />
+    <Restaurants locale={locale} />
     <script>
       const oldSections: Record<string, string> = { '#masa-home': '#top', '#masa-story': '#story', '#masa-collection': '#collection' };
       const restoreSection = () => {
