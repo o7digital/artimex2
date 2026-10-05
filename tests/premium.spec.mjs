@@ -41,14 +41,13 @@ for (const width of [1440, 768, 390, 320]) {
     await page.locator('.product-grid').scrollIntoViewIfNeeded();
     await expect(page.locator('astro-island').filter({ has: page.locator('.product-grid') })).not.toHaveAttribute('ssr', '');
     await page.getByRole('button', { name: 'Salados', exact: true }).click();
-    await expect(page.locator('.product-card:visible')).toHaveCount(1);
-    await expect(page.locator('.product-card:visible h3')).toHaveText('Bolillo');
+    await expect(page.locator('.product-card:visible')).toHaveCount(0);
     await page.getByRole('button', { name: 'Dulces', exact: true }).click();
     await expect(page.locator('.product-card:visible')).toHaveCount(9);
     await page.getByRole('button', { name: 'Todos', exact: true }).click();
-    await expect(page.locator('.product-card:visible')).toHaveCount(10);
+    await expect(page.locator('.product-card:visible')).toHaveCount(9);
     const photoPaths = await page.locator('.product-image-button img').evaluateAll(images => images.map(image => decodeURI(new URL(image.src).pathname)));
-    expect(new Set(photoPaths).size).toBe(10);
+    expect(new Set(photoPaths).size).toBe(9);
     expect(photoPaths.every(path => path.startsWith('/fotos/'))).toBe(true);
     expect(photoPaths[0]).toBe('/fotos/concha chocolate.jpg');
     await expect(page.locator('.product-card h3').first()).toHaveText('Concha Chocolate');

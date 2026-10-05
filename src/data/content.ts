@@ -69,7 +69,6 @@ const breadPhotos = [
   { id: "bigote-danes", name: "Bigote danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Bigote-Danes.jpg", description: { es: "Pan dulce danés en su característica forma de bigote.", en: "A Danish sweet pastry with its distinctive mustache shape." } },
   { id: "cuerno-danes", name: "Cuerno danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Cuerno-Danes.jpg", description: { es: "Pan dulce danés en forma de cuerno.", en: "A horn-shaped Danish sweet pastry." } },
   { id: "feite-guayaba", name: "Feite de guayaba", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Feite-Guayaba.jpg", description: { es: "Feite de guayaba para disfrutar y compartir.", en: "A guava feite pastry to enjoy and share." } },
-  { id: "bolillo", name: "Bolillo", type: "savory", image: "/fotos/El Gallo Giro Mexican_Bolillo.jpg", description: { es: "Un clásico de la mesa mexicana para acompañar tus comidas.", en: "A Mexican table classic to enjoy with your meals." } },
 ] as const;
 
 export const products = {
