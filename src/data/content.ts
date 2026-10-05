@@ -63,13 +63,13 @@ const breadPhotos = [
   { id: "concha-chocolate", name: "Concha Chocolate", type: "sweet", image: "/fotos/concha chocolate.jpg", description: { es: "Concha con cubierta de chocolate.", en: "Concha with a chocolate topping." } },
   { id: "concha-blanca", name: "Concha blanca", type: "sweet", image: "/fotos/El Gallo Giro Mexican_concha_white.jpg", description: { es: "Concha con cubierta blanca de azúcar.", en: "Concha with a white sugar topping." } },
   { id: "concha-mocha", name: "Concha mocha", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_mocha.jpg", description: { es: "Concha mocha para acompañar tu café.", en: "A mocha concha to enjoy with your coffee." } },
+  { id: "mantecadas", name: "Mantecadas", type: "sweet", image: "/fotos/mantecadas.jpg", description: { es: "Mantecadas para acompañar el café o compartir en la mesa.", en: "Mantecadas to enjoy with coffee or share around the table." } },
   { id: "concha-fresa", name: "Concha de fresa", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_strawberry.jpg", description: { es: "Concha de fresa para un momento dulce.", en: "A strawberry concha for a sweet moment." } },
-  { id: "bolillo", name: "Bolillo", type: "savory", image: "/fotos/El Gallo Giro Mexican_Bolillo.jpg", description: { es: "Un clásico de la mesa mexicana para acompañar tus comidas.", en: "A Mexican table classic to enjoy with your meals." } },
+  { id: "puerquitos", name: "Puerquitos", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Puerquitos.jpg", description: { es: "Un favorito de la panadería mexicana en forma de puerquito.", en: "A Mexican bakery favorite shaped like a little pig." } },
   { id: "bigote-danes", name: "Bigote danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Bigote-Danes.jpg", description: { es: "Pan dulce danés en su característica forma de bigote.", en: "A Danish sweet pastry with its distinctive mustache shape." } },
   { id: "cuerno-danes", name: "Cuerno danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Cuerno-Danes.jpg", description: { es: "Pan dulce danés en forma de cuerno.", en: "A horn-shaped Danish sweet pastry." } },
   { id: "feite-guayaba", name: "Feite de guayaba", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Feite-Guayaba.jpg", description: { es: "Feite de guayaba para disfrutar y compartir.", en: "A guava feite pastry to enjoy and share." } },
-  { id: "puerquitos", name: "Puerquitos", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Puerquitos.jpg", description: { es: "Un favorito de la panadería mexicana en forma de puerquito.", en: "A Mexican bakery favorite shaped like a little pig." } },
-  { id: "mantecadas", name: "Mantecadas", type: "sweet", image: "/fotos/mantecadas.jpg", description: { es: "Mantecadas para acompañar el café o compartir en la mesa.", en: "Mantecadas to enjoy with coffee or share around the table." } },
+  { id: "bolillo", name: "Bolillo", type: "savory", image: "/fotos/El Gallo Giro Mexican_Bolillo.jpg", description: { es: "Un clásico de la mesa mexicana para acompañar tus comidas.", en: "A Mexican table classic to enjoy with your meals." } },
 ] as const;
 
 export const products = {

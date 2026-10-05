@@ -52,6 +52,11 @@ for (const width of [1440, 768, 390, 320]) {
     expect(photoPaths.every(path => path.startsWith('/fotos/'))).toBe(true);
     expect(photoPaths[0]).toBe('/fotos/concha chocolate.jpg');
     await expect(page.locator('.product-card h3').first()).toHaveText('Concha Chocolate');
+    await expect(page.locator('.product-card h3').nth(3)).toHaveText('Mantecadas');
+    await expect(page.locator('.product-card h3').nth(4)).toHaveText('Concha de fresa');
+    await expect(page.locator('.product-card h3').nth(5)).toHaveText('Puerquitos');
+    expect(photoPaths[3]).toBe('/fotos/mantecadas.jpg');
+    expect(photoPaths[5]).toBe('/fotos/El Gallo Giro Mexican_Puerquitos.jpg');
     await page.locator('.product-image-button').first().click();
     await expect(page.locator('.product-dialog')).toBeVisible();
     await expect(page.locator('.product-dialog h2')).toHaveText('Concha Chocolate');
