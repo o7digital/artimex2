@@ -7,7 +7,7 @@ for (const width of [1440, 768, 390, 320]) {
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('response', response => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
-    await page.goto('/');
+    await page.goto('/es/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
     await expect(page.locator('.footer-contact address')).toContainText('12764 Florence Avenue');
     await expect(page.locator('.footer-phone')).toContainText('562-777-9607');

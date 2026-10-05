@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const site = process.env.PUBLIC_SITE_URL || 'https://artimex2.vercel.app';
 const url = path => new URL(path, site).href;
 const routes = [
-  ['/', 'es', '/es/'],
+  ['/', 'en', '/en/'],
   ['/es/', 'es', '/es/'],
   ['/en/', 'en', '/en/'],
   ['/es/aviso-de-privacidad/', 'es', '/es/aviso-de-privacidad/'],
@@ -21,6 +21,7 @@ for (const [route, lang, canonical] of routes) {
     expect(html).toContain('name="twitter:card" content="summary_large_image"');
     const languages = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)];
     expect(languages.map(match => match[1])).toEqual(['es', 'en', 'x-default']);
+    expect(languages[2][2]).toBe(languages[1][2]);
     for (const [, , href] of languages) {
       expect(href).toMatch(/^https:\/\//);
       const target = await request.get(new URL(href).pathname);
@@ -33,6 +34,7 @@ for (const [route, lang, canonical] of routes) {
       expect(bakery['@type']).toBe('Bakery');
       expect(bakery.address.postalCode).toBe('90670');
       expect(bakery.telephone).toBe('+15627770924');
+      expect(bakery.url).toBe(url('/en/'));
       expect(bakery).not.toHaveProperty('aggregateRating');
       const image = await request.get(new URL(bakery.image).pathname);
       expect(image.status()).toBe(200);
