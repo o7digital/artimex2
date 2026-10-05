@@ -2,7 +2,7 @@
 
 :root{--ivory:#f4f0e8;--paper:#eae3d7;--ink:#29231d;--muted:#756f65;--gold:#c2a377;--line:rgba(64,48,33,.18);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',Arial,sans-serif;color-scheme:light;font-family:var(--sans);color:var(--ink);background:var(--ivory);font-synthesis:none;}
 *,*::before,*::after{box-sizing:border-box;}
-html{scroll-behavior:smooth;scroll-padding-top:96px;}
+html{scroll-behavior:auto;scroll-padding-top:96px;}
 body{margin:0;}
 body.menu-open,body.dialog-open{overflow:hidden;}
 [hidden]{display:none!important;}
