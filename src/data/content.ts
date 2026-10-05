@@ -74,9 +74,15 @@ const breadPhotos = [
   { id: "pan-relleno", name: "Pan relleno", type: "sweet", image: "/fotos/hero3 -El Gallo Giro Mexican_.jpg", description: { es: "Pan dulce de acabado dorado con un relleno suave. Una pieza para disfrutar con tu bebida favorita y compartir en la mesa.", en: "A golden sweet bread with a soft filling. Enjoy it with your favorite drink and share it around the table." } },
 ] as const;
 
+const englishBreadNames: Partial<Record<typeof breadPhotos[number]['id'], string>> = {
+  'bigote-danes': 'Creme Cheese',
+  'cuerno-danes': 'Barclaw',
+  'nino-envuelto': 'Jelly Rol',
+};
+
 export const products = {
   es: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.es, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'PAN DULCE' : 'PAN SALADO' })),
-  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, name: bread.id === 'nino-envuelto' ? 'Jelly Rol' : bread.name, description: description.en, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
+  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, name: englishBreadNames[bread.id] ?? bread.name, description: description.en, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
 };
 
 export const extraFamilies = ['Pan fino', 'Danés', 'Feite', 'Polvorones', 'Puerquitos', 'Galletas', 'Guayabas', 'Pan de huevo'];
