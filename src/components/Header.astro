@@ -44,11 +44,15 @@ const t = copy[locale].nav;
     document.body.classList.toggle('menu-open', open);
     if (main) main.inert = open;
     if (footer) footer.inert = open;
-    if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
+    if (open) {
+      menu.scrollTop = 0;
+      menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+    }
     else if (restoreFocus) toggle.focus();
   };
   toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false, false)));
+  header?.querySelector('.header-brand')?.addEventListener('click', () => setMenu(false, false));
   document.addEventListener('keydown', (event) => {
     if (toggle?.getAttribute('aria-expanded') !== 'true') return;
     if (event.key === 'Escape') setMenu(false);
