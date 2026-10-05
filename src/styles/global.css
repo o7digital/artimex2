@@ -353,10 +353,10 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 @media(max-width:700px){.contact-section{padding-top:40px;padding-bottom:44px;}.contact-section .location-details{gap:24px;}.contact-section .contact-form>.button{font-size:13px;}}
 
 /* A visible invitation to continue below the hero. */
-.hero-scroll-down{position:absolute;z-index:3;left:50%;bottom:94px;transform:translateX(-50%);width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--ivory);border-radius:50%;}
+.hero-scroll-down{position:absolute;z-index:3;left:50%;bottom:94px;transform:translateX(-50%);width:56px;height:56px;display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(255,255,255,.5);background:rgba(28,21,15,.28);box-shadow:0 3px 14px rgba(0,0,0,.2);border-radius:50%;}
 .hero-scroll-down svg{animation:hero-chevron 2.2s ease-in-out infinite;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));}
-.hero-scroll-down:hover{background:rgba(244,240,232,.12);}
-@keyframes hero-chevron{0%,100%{opacity:1;transform:translateY(-3px);}50%{opacity:.4;transform:translateY(5px);}}
+.hero-scroll-down:hover{background:rgba(28,21,15,.5);border-color:#fff;}
+@keyframes hero-chevron{0%,100%{opacity:1;transform:translateY(-3px);}50%{opacity:.75;transform:translateY(5px);}}
 @media(max-width:700px){.hero-scroll-down{bottom:78px;}}
 @media(prefers-reduced-motion:reduce){.hero-scroll-down svg{animation:none;}}
 

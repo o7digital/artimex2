@@ -57,7 +57,7 @@ export default function Hero({ locale }: { locale: Locale }) {
       <a className="button button-ivory" href={scene.href}>{index === 2 ? t.story : t.explore}<Arrow /></a>
     </div>
     <a className="hero-scroll-down" href="#essence" aria-label={locale === 'es' ? 'Bajar y descubrir Artimex' : 'Scroll down to discover Artimex'}>
-      <svg width="28" height="18" viewBox="0 0 28 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 4 11 10L25 4" /></svg>
+      <svg width="36" height="24" viewBox="0 0 28 18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 4 11 10L25 4" /></svg>
     </a>
     <div className="hero-bottom">
       <a className="scroll-cue" href="#essence"><span className="scroll-line" /><span>{t.scroll}</span></a>
