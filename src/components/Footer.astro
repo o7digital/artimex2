@@ -45,6 +45,7 @@ const links = [
   <div class="footer-bottom">
     <span class="footer-rights">© {new Date().getFullYear()} {t.footer.rights}</span>
     <div class="footer-links"><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
+    <a class="footer-credit" href={`https://www.o7digital.com/${locale}/`}>{es ? 'Hecho por O7 Digital' : 'Made by O7 Digital'}</a>
     <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" data-language-link aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" data-language-link aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
   </div>
 </footer>
