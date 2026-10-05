@@ -1,17 +1,18 @@
 ---
 import { copy, type Locale } from '../data/content';
 import Icon from './Icon.astro';
-interface Props { locale: Locale; id: string; }
-const { locale, id } = Astro.props;
+interface Props { locale: Locale; id: string; careers?: boolean; }
+const { locale, id, careers = false } = Astro.props;
 const t = copy[locale].contact;
+const c = copy[locale].careers;
 ---
-<form id={id} class="contact-form" action="https://formspree.io/f/meaeqdaj" method="POST" data-sending={t.sending} data-success={t.success} data-error={t.error}>
-  <input type="hidden" name="_subject" value={t.subject} />
+<form id={id} class="contact-form" action="https://formspree.io/f/meaeqdaj" method="POST" data-sending={t.sending} data-success={careers ? c.success : t.success} data-error={t.error}>
+  <input type="hidden" name="_subject" value={careers ? c.subject : t.subject} />
   <input type="hidden" name="language" value={locale} />
   <div class="form-row"><label>{t.name}<span aria-hidden="true"> *</span><input name="name" type="text" autocomplete="name" required maxlength="120" /></label><label>{t.email}<span aria-hidden="true"> *</span><input name="email" type="email" autocomplete="email" required maxlength="254" /></label></div>
-  <label>{t.company}<input name="company" type="text" autocomplete="organization" maxlength="180" /></label>
-  <label>{t.message}<span aria-hidden="true"> *</span><textarea name="message" required rows="4" placeholder={t.placeholder} maxlength="4000" /></label>
-  <button class="button button-dark" type="submit"><span data-submit-label>{t.button}</span><Icon /></button>
+  {careers ? <label>{c.cv}<input name="resume_url" type="url" placeholder="https://" maxlength="2000" /></label> : <label>{t.company}<input name="company" type="text" autocomplete="organization" maxlength="180" /></label>}
+  <label>{careers ? c.message : t.message}<span aria-hidden="true"> *</span><textarea name="message" required rows="4" placeholder={careers ? c.placeholder : t.placeholder} maxlength="4000" /></label>
+  <button class="button button-dark" type="submit"><span data-submit-label>{careers ? c.button : t.button}</span><Icon /></button>
   <p class="form-notice">{t.notice}</p>
   <p class="form-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </form>

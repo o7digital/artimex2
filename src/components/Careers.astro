@@ -1,11 +1,11 @@
 ---
-import { brand, copy, type Locale } from '../data/content';
+import { copy, type Locale } from '../data/content';
 import { privacyPaths } from '../data/privacyNotice';
 import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale].careers;
-const email = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}`;
 ---
 <section class="careers-section section-wrap" id="careers" aria-labelledby="careers-title">
   <figure class="careers-photo reveal">
@@ -16,11 +16,36 @@ const email = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}`;
     <p class="eyebrow">{t.eyebrow}</p>
     <h2 id="careers-title">{t.first}<br /><em>{t.second}</em></h2>
     <p class="careers-description">{t.body}</p>
-    <a class="button button-dark careers-email" href={email}>{t.link}<Icon /></a>
+    <button type="button" class="button button-dark careers-email" data-careers aria-haspopup="dialog" aria-controls="careers-dialog">{t.link}<Icon /></button>
     <p class="careers-note">{t.resume}</p>
     <a class="careers-privacy" href={privacyPaths[locale]}>{t.privacy}</a>
   </div>
 </section>
+<dialog class="contact-dialog" id="careers-dialog" aria-labelledby="careers-dialog-title">
+  <button type="button" class="dialog-close" data-careers-close aria-label={copy[locale].contact.close}><Icon name="close" /></button>
+  <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
+  <div class="contact-inner">
+    <p class="eyebrow">{t.eyebrow}</p><h2 id="careers-dialog-title">{t.first} {t.second}</h2>
+    <p class="contact-intro">{t.body}</p>
+    <ContactForm locale={locale} id="careers-form" careers />
+    <a class="careers-privacy" href={privacyPaths[locale]}>{t.privacy}</a>
+  </div>
+</dialog>
+<script>
+  const dialog = document.getElementById('careers-dialog') as HTMLDialogElement;
+  let trigger: HTMLElement | null = null;
+  document.querySelectorAll<HTMLElement>('[data-careers]').forEach(button => button.addEventListener('click', () => {
+    trigger = button;
+    dialog.showModal();
+    document.body.classList.add('dialog-open');
+  }));
+  dialog.querySelector('[data-careers-close]')?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', () => {
+    if (!document.querySelector('dialog[open]')) document.body.classList.remove('dialog-open');
+    trigger?.focus();
+  });
+</script>
 <style>
   .careers-section{display:grid;grid-template-columns:1fr .88fr;gap:9.8vw;align-items:center;padding-top:104px;padding-bottom:104px;border-bottom:1px solid var(--line);}
   .careers-photo{position:relative;min-width:0;margin:0;}
