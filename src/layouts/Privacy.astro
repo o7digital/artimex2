@@ -33,7 +33,7 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
       <a class="brand" href={home} aria-label="Artimex Bakery"><Logo class="privacy-logo" eager /></a>
       <nav aria-label={es ? 'Navegación del aviso' : 'Notice navigation'}>
         <a class="return-home" href={home} aria-label={t.home}><span aria-hidden="true">←</span><span class="return-label">{t.home}</span></a>
-        <a class="privacy-language" href={privacyPaths[other]} hreflang={other} lang={other} aria-label={es ? 'Read in English' : 'Leer en español'}>{other.toUpperCase()}</a>
+        <a class="privacy-language" href={privacyPaths[other]} hreflang={other} lang={other} data-language-link aria-label={es ? 'Read in English' : 'Leer en español'}>{other.toUpperCase()}</a>
       </nav>
     </header>
     <main id="privacy-content" class="section-wrap">

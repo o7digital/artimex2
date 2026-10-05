@@ -19,7 +19,7 @@ const links = [
   { label: t.nav.contact, href: `${home}#contact` },
 ];
 ---
-<footer class="site-footer section-wrap">
+<footer class="site-footer section-wrap" id="site-footer">
   <div class="footer-main">
     <div class="footer-identity">
       <a class="brand" href={home} aria-label="Artimex Bakery"><Logo class="footer-logo" width={440} /></a>
@@ -42,6 +42,9 @@ const links = [
   <div class="footer-bottom">
     <span class="footer-rights">© {new Date().getFullYear()} {t.footer.rights}</span>
     <div class="footer-links"><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
-    <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
+    <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" data-language-link aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" data-language-link aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
   </div>
 </footer>
+<script>
+  import '../scripts/language-navigation';
+</script>
