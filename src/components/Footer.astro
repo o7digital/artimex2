@@ -1,18 +1,46 @@
 ---
-import { copy, type Locale } from '../data/content';
+import { brand, copy, type Locale } from '../data/content';
 import { privacyNotice, privacyPaths } from '../data/privacyNotice';
 import Icon from './Icon.astro';
 interface Props { locale: Locale; page?: 'home' | 'privacy'; }
 const { locale, page = 'home' } = Astro.props;
 const t = copy[locale];
+const es = locale === 'es';
+const home = `/${locale}/`;
 const languages = page === 'privacy' ? privacyPaths : { es: '/es/', en: '/en/' };
+const explore = es ? 'Explora Artimex' : 'Explore Artimex';
+const links = [
+  { label: es ? 'Inicio' : 'Home', href: home },
+  { label: t.nav.story, href: `${home}#story` },
+  { label: t.nav.collection, href: `${home}#collection` },
+  { label: t.nav.business, href: `${home}#business` },
+  { label: t.nav.careers, href: `${home}#careers` },
+  { label: t.nav.contact, href: `${home}#contact` },
+];
 ---
 <footer class="site-footer section-wrap">
+  <div class="footer-main">
+    <div class="footer-identity">
+      <a class="brand" href={home} aria-label="Artimex Bakery"><Icon name="wheat" class="brand-mark" /><span><span class="brand-name">ARTIMEX</span><span class="brand-subtitle">ARTISAN MEXICAN BAKERY</span></span></a>
+      <p>{es ? 'Auténtico pan mexicano, elaborado con oficio y calidad constante.' : 'Authentic Mexican bread, made with craft and built for consistency.'}</p>
+      <span class="eyebrow">ARTIMEX ARTISAN MEXICAN BAKERY</span>
+    </div>
+    <nav class="footer-explore" aria-label={explore}>
+      <h2 class="eyebrow">{explore}</h2>
+      {links.map(link => <a href={link.href}>{link.label}</a>)}
+    </nav>
+    <div class="footer-contact">
+      <h2 class="eyebrow">{es ? 'Conversemos' : 'Let’s talk'}</h2>
+      <p class="footer-department">{es ? 'Departamento de ventas de Artimex Bakery' : 'Artimex Bakery Sales Department'}</p>
+      <address>{brand.address}<br />{brand.city}<br />{es ? 'Estados Unidos' : 'United States'}</address>
+      <a class="footer-email" href={`mailto:${brand.email}`}>{brand.email}<Icon /></a>
+      <p class="footer-phone">{es ? 'Teléfono' : 'Phone'}: <a href={brand.phoneHref}>562-777-0924</a><br />FAX: {brand.fax}</p>
+    </div>
+  </div>
   <div class="footer-top"><span>{t.footer.tagline}</span><a href="#top" class="back-to-top">{t.location.top}<Icon name="down" /></a></div>
   <div class="footer-bottom">
-    <div class="footer-links"><a href="/box/">{locale === 'es' ? 'Compón tu caja · demo' : 'Build your box · demo'}</a><a href={`/${locale}/#careers`}>{t.nav.careers}</a><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
     <span class="footer-rights">© {new Date().getFullYear()} {t.footer.rights}</span>
-    <span class="footer-concept">{t.footer.concept}</span>
+    <div class="footer-links"><a href={privacyPaths[locale]}>{privacyNotice[locale].title}</a></div>
     <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
   </div>
 </footer>

@@ -7,6 +7,7 @@ export const brand = {
   email: 'sales@artimex.com',
   phone: '+1 562 777 0924',
   phoneHref: 'tel:+15627770924',
+  fax: '562-777-9607',
   address: '12764 Florence Avenue',
   city: 'Santa Fe Springs, CA 90670',
   map: 'https://www.google.com/maps/search/?api=1&query=12764+Florence+Avenue+Santa+Fe+Springs+CA+90670',

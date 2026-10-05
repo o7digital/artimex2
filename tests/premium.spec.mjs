@@ -9,6 +9,11 @@ for (const width of [1440, 768, 390, 320]) {
     page.on('response', response => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+    await expect(page.locator('.footer-contact address')).toContainText('12764 Florence Avenue');
+    await expect(page.locator('.footer-phone')).toContainText('562-777-9607');
+    await expect(page.locator('.footer-email')).toHaveAttribute('href', 'mailto:sales@artimex.com');
+    await expect(page.locator('.footer-explore a')).toHaveCount(6);
+    await expect(page.locator('.footer-explore a[href="/es/#collection"]')).toHaveText('Nuestros panes');
     await expect(page.locator('.hero')).toHaveClass(/is-paused/);
     await expect(page.locator('.hero h1')).toHaveText('El arte decompartir.');
     const heroBounds = await page.locator('.hero').boundingBox();
