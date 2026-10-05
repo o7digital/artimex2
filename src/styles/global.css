@@ -321,3 +321,10 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .bread-recipe-note{font-size:9px;line-height:1.7;color:var(--muted);margin-top:25px;}
 .bread-details-inner>.button{width:100%;margin-top:24px;justify-content:space-between;font-size:11px;}
 @media(max-width:700px){.bread-details-dialog{grid-template-columns:1fr;}.bread-details-inner h2{font-size:48px;}.bread-notes{grid-template-columns:1fr;gap:20px;}}
+
+/* Supplied official Artimex header logo */
+.header-brand{padding:6px 8px;background:#fff;border-radius:2px;}
+.header-logo{display:block;width:140px;height:auto;transition:width .35s;}
+.site-header{padding-top:15px;padding-bottom:15px;}
+.site-header.is-scrolled .header-logo{width:105px;}
+@media(max-width:700px){.header-logo{width:100px;}.site-header{padding-top:12px;padding-bottom:12px;}.site-header.is-scrolled .header-logo{width:85px;}}
