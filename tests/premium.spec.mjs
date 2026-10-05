@@ -37,10 +37,14 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('astro-island').filter({ has: page.locator('.product-grid') })).not.toHaveAttribute('ssr', '');
     await page.getByRole('button', { name: 'Salados', exact: true }).click();
     await expect(page.locator('.product-card:visible')).toHaveCount(1);
-    await expect(page.locator('.product-card:visible h3')).toHaveText('Bolillos');
+    await expect(page.locator('.product-card:visible h3')).toHaveText('Bolillo');
     await page.getByRole('button', { name: 'Dulces', exact: true }).click();
-    await expect(page.locator('.product-card:visible')).toHaveCount(2);
+    await expect(page.locator('.product-card:visible')).toHaveCount(10);
     await page.getByRole('button', { name: 'Todos', exact: true }).click();
+    await expect(page.locator('.product-card:visible')).toHaveCount(11);
+    const photoPaths = await page.locator('.product-image-button img').evaluateAll(images => images.map(image => decodeURI(new URL(image.src).pathname)));
+    expect(new Set(photoPaths).size).toBe(11);
+    expect(photoPaths.every(path => path.startsWith('/fotos/'))).toBe(true);
     await page.locator('.product-image-button').first().click();
     await expect(page.locator('.product-dialog')).toBeVisible();
     await expect(page.locator('.product-dialog h2')).toHaveText('Conchas');

@@ -33,7 +33,7 @@ export default function Collection({ locale }: { locale: Locale }) {
     <div className="product-grid">
       {items.map((item, i) => <article key={item.id} className="product-card" hidden={filter !== 'all' && item.type !== filter}>
         <button className="product-image-button" onClick={(event) => openProduct(i, event.currentTarget)} aria-label={`${t.view} ${item.name}`}>
-          <img src={`/images/${item.image}.webp`} alt={`${item.name} — ${t.photo}`} width="1024" height="1280" loading="lazy" decoding="async" />
+          <img src={encodeURI(item.image)} alt={item.name} width="1024" height="1280" loading="lazy" decoding="async" />
           <span className="product-view"><span>{t.details}</span><Arrow /></span>
           <span className="product-index">{String(i + 1).padStart(2, '0')}</span>
         </button>
@@ -46,8 +46,8 @@ export default function Collection({ locale }: { locale: Locale }) {
     </div>
     <dialog className="product-dialog" ref={dialog} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       <button className="dialog-close" aria-label={t.close} onClick={() => dialog.current?.close()}><Close /></button>
-      <div className="product-dialog-image"><img src={`/images/${product.image}.webp`} alt={`${product.name} — ${t.photo}`} width="1024" height="1280" /></div>
-      <div className="product-dialog-copy"><p className="eyebrow">{product.kind}</p><h2>{product.name}</h2><p>{product.description}</p><p className="eyebrow varieties-heading">{t.varieties}</p><ul>{product.varieties.map((name) => <li key={name}>{name}</li>)}</ul><p className="product-contact-note">{t.contact}</p><button className="button button-dark" onClick={enquire}>{t.enquire}<Arrow /></button></div>
+      <div className="product-dialog-image"><img src={encodeURI(product.image)} alt={product.name} width="1024" height="1280" /></div>
+      <div className="product-dialog-copy"><p className="eyebrow">{product.kind}</p><h2>{product.name}</h2><p>{product.description}</p><p className="product-contact-note">{t.contact}</p><button className="button button-dark" onClick={enquire}>{t.enquire}<Arrow /></button></div>
     </dialog>
   </div>;
 }

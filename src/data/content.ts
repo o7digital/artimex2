@@ -58,17 +58,23 @@ export const slides = {
   ],
 };
 
+const breadPhotos = [
+  { id: "conchas", name: "Conchas", type: "sweet", image: "/fotos/El Gallo Giro Mexican_conchas.jpg", description: { es: "Selección de conchas tradicionales mexicanas.", en: "A selection of traditional Mexican conchas." } },
+  { id: "concha-blanca", name: "Concha blanca", type: "sweet", image: "/fotos/El Gallo Giro Mexican_concha_white.jpg", description: { es: "Concha con cubierta blanca de azúcar.", en: "Concha with a white sugar topping." } },
+  { id: "concha-mocha", name: "Concha mocha", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_mocha.jpg", description: { es: "Concha mocha para acompañar tu café.", en: "A mocha concha to enjoy with your coffee." } },
+  { id: "concha-chocolate", name: "Concha de chocolate", type: "sweet", image: "/fotos/El Gallo Giro Mexican_xonxha_choclate.jpg", description: { es: "Concha con cubierta de chocolate.", en: "Concha with a chocolate topping." } },
+  { id: "concha-fresa", name: "Concha de fresa", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_strawberry.jpg", description: { es: "Concha de fresa para un momento dulce.", en: "A strawberry concha for a sweet moment." } },
+  { id: "bolillo", name: "Bolillo", type: "savory", image: "/fotos/El Gallo Giro Mexican_Bolillo.jpg", description: { es: "Un clásico de la mesa mexicana para acompañar tus comidas.", en: "A Mexican table classic to enjoy with your meals." } },
+  { id: "bigote-danes", name: "Bigote danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Bigote-Danes.jpg", description: { es: "Pan dulce danés en su característica forma de bigote.", en: "A Danish sweet pastry with its distinctive mustache shape." } },
+  { id: "cuerno-danes", name: "Cuerno danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Cuerno-Danes.jpg", description: { es: "Pan dulce danés en forma de cuerno.", en: "A horn-shaped Danish sweet pastry." } },
+  { id: "feite-guayaba", name: "Feite de guayaba", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Feite-Guayaba.jpg", description: { es: "Feite de guayaba para disfrutar y compartir.", en: "A guava feite pastry to enjoy and share." } },
+  { id: "puerquitos", name: "Puerquitos", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Puerquitos.jpg", description: { es: "Un favorito de la panadería mexicana en forma de puerquito.", en: "A Mexican bakery favorite shaped like a little pig." } },
+  { id: "mantecadas", name: "Mantecadas", type: "sweet", image: "/fotos/mantecadas.jpg", description: { es: "Mantecadas para acompañar el café o compartir en la mesa.", en: "Mantecadas to enjoy with coffee or share around the table." } },
+] as const;
+
 export const products = {
-  es: [
-    { id: 'conchas', name: 'Conchas', type: 'sweet', kind: 'DULCES RECUERDOS', description: 'La concha es un clásico de la panadería mexicana. Su cubierta dibuja una delicada concha de azúcar sobre un pan suave. Un favorito para acompañar el café y compartir en la mesa.', varieties: ['Chocolate', 'Blanca', 'Amarilla', 'Rosa'], image: 'product-conchas' },
-    { id: 'bolillos', name: 'Bolillos', type: 'savory', kind: 'EL PAN DE CADA DÍA', description: 'Una corteza dorada y un interior suave. Bolillos y teleras forman parte de la mesa mexicana y son la base de muchos de sus encuentros más sabrosos.', varieties: ['Bolillo', 'Telera', 'Francés bolillo relleno', 'Bolillo integral'], image: 'product-bolillos' },
-    { id: 'empanadas', name: 'Empanadas', type: 'sweet', kind: 'UN CORAZÓN DULCE', description: 'Un delicado pan dulce que envuelve un relleno de fruta. Su forma de media luna y su borde característico hacen de la empanada un pequeño placer para compartir.', varieties: ['Selección de rellenos de fruta'], image: 'product-empanadas' },
-  ],
-  en: [
-    { id: 'conchas', name: 'Conchas', type: 'sweet', kind: 'SWEET MEMORIES', description: 'A classic of Mexican baking. A delicate shell of sugar rests on soft bread, making the concha a favorite to enjoy over coffee and around the table.', varieties: ['Chocolate', 'White', 'Yellow', 'Pink'], image: 'product-conchas' },
-    { id: 'bolillos', name: 'Bolillos', type: 'savory', kind: 'OUR EVERYDAY BREAD', description: 'A golden crust and a soft center. Bolillos and teleras have a place at the Mexican table, bringing people together over some of its most delicious meals.', varieties: ['Bolillo', 'Telera', 'French stuffed bolillo', 'Whole wheat bolillo'], image: 'product-bolillos' },
-    { id: 'empanadas', name: 'Empanadas', type: 'sweet', kind: 'A SWEET HEART', description: 'A delicately sweet bread wrapped around a fruit filling. Its familiar crescent shape and crimped edges make the empanada a little pleasure to share.', varieties: ['A selection of fruit fillings'], image: 'product-empanadas' },
-  ],
+  es: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.es, kind: bread.type === 'sweet' ? 'PAN DULCE' : 'PAN SALADO' })),
+  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.en, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
 };
 
 export const extraFamilies = ['Pan fino', 'Danés', 'Feite', 'Polvorones', 'Puerquitos', 'Galletas', 'Guayabas', 'Pan de huevo'];
