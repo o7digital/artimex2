@@ -76,7 +76,7 @@ const breadPhotos = [
 
 export const products = {
   es: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.es, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'PAN DULCE' : 'PAN SALADO' })),
-  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.en, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
+  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, name: bread.id === 'nino-envuelto' ? 'Jelly Rol' : bread.name, description: description.en, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
 };
 
 export const extraFamilies = ['Pan fino', 'Danés', 'Feite', 'Polvorones', 'Puerquitos', 'Galletas', 'Guayabas', 'Pan de huevo'];
