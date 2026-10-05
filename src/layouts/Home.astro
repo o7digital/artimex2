@@ -17,6 +17,7 @@ import Careers from '../components/Careers.astro';
 import Restaurants from '../components/Restaurants.astro';
 import BreadDetails from '../components/BreadDetails.astro';
 import Seo from '../components/Seo.astro';
+import ContactForm from '../components/ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -55,6 +56,7 @@ const t = copy[locale];
       <section class="contact-section section-wrap" id="contact">
         <div class="location-heading reveal"><p class="eyebrow">{t.location.eyebrow}</p><h2>{t.location.first}<br /><em>{t.location.second}</em></h2></div>
         <div class="location-details reveal"><div><p class="eyebrow">{t.location.address}</p><address>{brand.address}<br />{brand.city}</address><a class="text-link" href={brand.map} target="_blank" rel="noopener noreferrer">{t.location.directions}<Icon /></a></div><div><p class="eyebrow">{t.location.sales}</p><a class="contact-email" href={`mailto:${brand.email}`}>{brand.email}</a><a class="contact-phone" href={brand.phoneHref}>{brand.phone}</a><button class="text-link" data-contact>{t.location.contact}<Icon /></button></div></div>
+        <div class="contact-inline"><p class="eyebrow">{t.contact.eyebrow}</p><h3>{t.contact.title}</h3><p class="contact-intro">{t.contact.body}</p><ContactForm locale={locale} id="contact-section-form" /></div>
       </section>
     </main>
     <Footer locale={locale} />

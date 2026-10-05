@@ -1,39 +1,25 @@
 ---
-import { brand, copy, type Locale } from '../data/content';
+import { copy, type Locale } from '../data/content';
 import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale].contact;
 ---
-<dialog class="contact-dialog" id="contact-dialog" data-subject={t.subject} data-product={t.product} data-name-label={t.name} data-email-label={t.email} data-company-label={t.company} data-message-label={t.message} data-copied-label={t.copied} data-copy-label={t.copy} data-recipient={brand.email}>
+<dialog class="contact-dialog" id="contact-dialog" data-product={t.product}>
   <button class="dialog-close" id="contact-close" aria-label={t.close}><Icon name="close" /></button>
   <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
   <div class="contact-inner">
     <p class="eyebrow">{t.eyebrow}</p><h2>{t.title}</h2><p class="contact-intro">{t.body}</p>
-    <form id="contact-form">
-      <div class="form-row"><label>{t.name}<span aria-hidden="true"> *</span><input name="name" type="text" autocomplete="name" required maxlength="120" /></label><label>{t.email}<span aria-hidden="true"> *</span><input name="email" type="email" autocomplete="email" required maxlength="254" /></label></div>
-      <label>{t.company}<input name="company" type="text" autocomplete="organization" maxlength="180" /></label>
-      <label>{t.message}<span aria-hidden="true"> *</span><textarea name="message" required rows="3" placeholder={t.placeholder} maxlength="4000" /></label>
-      <button class="button button-dark" type="submit">{t.button}<Icon /></button><p class="form-notice">{t.notice}</p>
-    </form>
-    <div id="contact-ready" hidden>
-      <h3 tabindex="-1" id="contact-ready-title">{t.ready}</h3><p>{t.readyBody} <a href={`mailto:${brand.email}`}>{brand.email}</a>.</p>
-      <label class="draft-label" for="inquiry-draft">{t.draft}</label><textarea id="inquiry-draft" readonly rows="8" />
-      <div class="draft-actions"><a class="button button-dark" id="contact-mailto" href={`mailto:${brand.email}`}>{t.emailButton}<Icon /></a><button class="text-link" id="copy-inquiry" type="button">{t.copy}</button></div>
-      <p id="copy-status" role="status"></p><button class="text-link" id="edit-inquiry" type="button">{t.back}</button>
-    </div>
+    <ContactForm locale={locale} id="contact-form" />
   </div>
 </dialog>
 <script>
   const dialog = document.getElementById('contact-dialog') as HTMLDialogElement;
   const form = document.getElementById('contact-form') as HTMLFormElement;
-  const ready = document.getElementById('contact-ready') as HTMLElement;
-  const draft = document.getElementById('inquiry-draft') as HTMLTextAreaElement;
-  const mailto = document.getElementById('contact-mailto') as HTMLAnchorElement;
   let contactTrigger: HTMLElement | null = null;
   const openContact = (product = '', trigger?: HTMLElement) => {
     contactTrigger = trigger || document.activeElement as HTMLElement;
-    ready.hidden = true; form.hidden = false;
     const message = form.elements.namedItem('message') as HTMLTextAreaElement;
     if (product) message.value = `${dialog.dataset.product}${product}.`;
     dialog.showModal(); document.body.classList.add('dialog-open');
@@ -43,19 +29,4 @@ const t = copy[locale].contact;
   document.getElementById('contact-close')?.addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
   dialog.addEventListener('close', () => { if (!document.querySelector('dialog[open]')) { document.body.classList.remove('dialog-open'); contactTrigger?.focus(); } });
-  form.addEventListener('submit', (event) => {
-    event.preventDefault(); if (!form.reportValidity()) return;
-    const fields = new FormData(form);
-    const body = `${dialog.dataset.nameLabel}: ${fields.get('name')}\n${dialog.dataset.emailLabel}: ${fields.get('email')}\n${dialog.dataset.companyLabel}: ${fields.get('company') || '—'}\n\n${fields.get('message')}`;
-    draft.value = body;
-    const href = `mailto:${dialog.dataset.recipient}?subject=${encodeURIComponent(dialog.dataset.subject || '')}&body=${encodeURIComponent(body)}`;
-    mailto.href = href; form.hidden = true; ready.hidden = false;
-    document.getElementById('contact-ready-title')?.focus();
-  });
-  document.getElementById('copy-inquiry')?.addEventListener('click', async () => {
-    const status = document.getElementById('copy-status');
-    try { await navigator.clipboard.writeText(draft.value); if (status) status.textContent = dialog.dataset.copiedLabel || ''; }
-    catch { draft.focus(); draft.select(); }
-  });
-  document.getElementById('edit-inquiry')?.addEventListener('click', () => { ready.hidden = true; form.hidden = false; form.querySelector<HTMLInputElement>('input')?.focus(); });
 </script>
