@@ -15,6 +15,7 @@ import Story from '../components/Story.astro';
 import Footer from '../components/Footer.astro';
 import Careers from '../components/Careers.astro';
 import Restaurants from '../components/Restaurants.astro';
+import BreadDetails from '../components/BreadDetails.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -60,6 +61,7 @@ const t = copy[locale];
     <Footer locale={locale} />
     <Contact locale={locale} />
     <Restaurants locale={locale} />
+    <BreadDetails />
     <script>
       const oldSections: Record<string, string> = { '#masa-home': '#top', '#masa-story': '#story', '#masa-collection': '#collection' };
       const restoreSection = () => {

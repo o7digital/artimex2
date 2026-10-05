@@ -74,9 +74,19 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('#contact-dialog')).toBeHidden();
     await page.getByRole('button', { name: 'Más de nuestra panadería' }).click();
     await expect(page.locator('.family-list button')).toHaveCount(8);
-    await page.locator('.family-list button').first().click();
-    await expect(page.locator('textarea[name="message"]')).toHaveValue(/Pan fino/);
-    await page.getByRole('button', { name: 'Cerrar contacto', exact: true }).click();
+    for (const button of await page.locator('.family-list button').all()) {
+      const name = (await button.innerText()).replace(/\d+/g, '').trim();
+      await button.click();
+      const details = page.locator('#bread-details-dialog');
+      await expect(details).toBeVisible();
+      await expect(details.locator('article:visible h2')).toHaveText(name);
+      await expect(details.locator('article:visible .bread-ingredients li').first()).toBeVisible();
+      await expect(details.locator('form')).toHaveCount(0);
+      await expect(page.locator('#contact-dialog')).toBeHidden();
+      await page.getByRole('button', { name: 'Volver a la colección', exact: true }).click();
+      await expect(details).toBeHidden();
+      await expect(button).toBeFocused();
+    }
     for (const id of ['story', 'collection', 'business', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
     }

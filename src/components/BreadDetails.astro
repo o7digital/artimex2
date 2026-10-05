@@ -1,0 +1,46 @@
+---
+import { breadDetails } from '../data/breadDetails';
+import Icon from './Icon.astro';
+---
+<dialog class="bread-details-dialog" id="bread-details-dialog" aria-labelledby="bread-details-title" lang="es">
+  <button class="dialog-close" data-bread-close aria-label="Cerrar detalles del pan"><Icon name="close" /></button>
+  <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
+  <div class="contact-inner bread-details-inner">
+    <p class="eyebrow">EL SABOR DE LA TRADICIÓN</p>
+    {breadDetails.map((bread, i) => <article data-bread-panel={bread.name} hidden={i !== 0}>
+      <h2 id={i === 0 ? 'bread-details-title' : undefined}>{bread.name}</h2>
+      <p class="bread-description">{bread.description}</p>
+      <h3 class="eyebrow">¿DE QUÉ ESTÁ HECHO?</h3>
+      <p class="bread-recipe-label">Ingredientes habituales de la receta tradicional</p>
+      <ul class="bread-ingredients">{bread.ingredients.map(ingredient => <li>{ingredient}</li>)}</ul>
+      <div class="bread-notes"><div><h3 class="eyebrow">SU TEXTURA</h3><p>{bread.texture}</p></div><div><h3 class="eyebrow">EL MOMENTO PERFECTO</h3><p>{bread.pairing}</p></div></div>
+    </article>)}
+    <p class="bread-recipe-note">Descripción de la preparación tradicional. Los ingredientes de Artimex pueden variar según la presentación.</p>
+    <button class="button button-dark" data-bread-close>Volver a la colección<Icon /></button>
+  </div>
+</dialog>
+<script>
+  const dialog = document.getElementById('bread-details-dialog') as HTMLDialogElement;
+  let trigger: HTMLElement | null = null;
+  window.addEventListener('artimex:bread', event => {
+    const name = (event as CustomEvent<{ product: string }>).detail?.product;
+    const panels = Array.from(dialog.querySelectorAll<HTMLElement>('[data-bread-panel]'));
+    const selected = panels.find(panel => panel.dataset.breadPanel === name);
+    if (!selected) return;
+    panels.forEach(panel => {
+      panel.hidden = panel !== selected;
+      panel.querySelector('h2')?.removeAttribute('id');
+    });
+    selected.querySelector('h2')?.setAttribute('id', 'bread-details-title');
+    trigger = document.activeElement as HTMLElement;
+    dialog.showModal();
+    dialog.scrollTop = 0;
+    document.body.classList.add('dialog-open');
+  });
+  dialog.querySelectorAll('[data-bread-close]').forEach(button => button.addEventListener('click', () => dialog.close()));
+  dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', () => {
+    if (!document.querySelector('dialog[open]')) document.body.classList.remove('dialog-open');
+    trigger?.focus();
+  });
+</script>

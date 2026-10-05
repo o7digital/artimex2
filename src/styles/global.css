@@ -306,3 +306,18 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .site-footer .footer-bottom{margin-top:12px;font-size:10px;}
 @media(max-width:1000px){.footer-main{gap:30px;grid-template-columns:1fr .8fr 1fr;}.footer-identity .brand-name{font-size:28px;}.footer-identity .brand-subtitle{font-size:5px;}}
 @media(max-width:700px){.site-footer{padding-top:45px;padding-bottom:24px;}.footer-main{grid-template-columns:1fr;gap:35px;padding-bottom:35px;}.footer-identity>p{font-size:26px;max-width:330px;}.footer-explore{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;}.footer-main h2.eyebrow{grid-column:1/-1;margin-bottom:14px;}.site-footer .footer-links{flex-basis:auto;}.site-footer .footer-bottom{gap:12px 18px;}.site-footer .footer-rights{order:0;}.site-footer .footer-languages{order:0;margin-left:0;}}
+
+/* Traditional bread details in the Artimex inquiry design */
+.bread-details-dialog{width:min(900px,92vw);padding:0;display:grid;grid-template-columns:235px minmax(0,1fr);overflow:auto;}
+.bread-details-dialog:not([open]){display:none;}
+.bread-details-inner h2{font-size:59px;line-height:1.05;letter-spacing:-.03em;margin-top:17px;}
+.bread-description{font-size:12px;color:var(--muted);line-height:1.9;margin:22px 0 28px;}
+.bread-details-inner h3.eyebrow{font-family:var(--sans);font-size:8px;letter-spacing:.14em;white-space:normal;}
+.bread-recipe-label{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.7;}
+.bread-ingredients{list-style:none;padding:0;margin:15px 0 28px;display:flex;flex-wrap:wrap;gap:8px;}
+.bread-ingredients li{font-size:11px;line-height:1.5;border:1px solid var(--line);padding:8px 12px;}
+.bread-notes{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid var(--line);padding-top:22px;}
+.bread-notes p{font-size:12px;line-height:1.8;margin-top:10px;color:var(--muted);}
+.bread-recipe-note{font-size:9px;line-height:1.7;color:var(--muted);margin-top:25px;}
+.bread-details-inner>.button{width:100%;margin-top:24px;justify-content:space-between;font-size:11px;}
+@media(max-width:700px){.bread-details-dialog{grid-template-columns:1fr;}.bread-details-inner h2{font-size:48px;}.bread-notes{grid-template-columns:1fr;gap:20px;}}

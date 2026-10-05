@@ -42,7 +42,7 @@ export default function Collection({ locale }: { locale: Locale }) {
     </div>
     <div className="more-collection"><button className="text-link" aria-expanded={expanded} aria-controls="extra-families" onClick={() => setExpanded(!expanded)}>{expanded ? t.less : t.more}<span className={expanded ? 'extra-plus is-open' : 'extra-plus'}>+</span></button></div>
     <div className="extra-families" id="extra-families" hidden={!expanded}>
-      <h3>{t.extra}</h3><div className="family-list">{extraFamilies.map((name, i) => <button key={name} onClick={() => window.dispatchEvent(new CustomEvent('artimex:contact', { detail: { product: name } }))}>{name}<Arrow /><span>{String(i + 4).padStart(2, '0')}</span></button>)}</div>
+      <h3>{t.extra}</h3><div className="family-list">{extraFamilies.map((name, i) => <button key={name} onClick={() => window.dispatchEvent(new CustomEvent('artimex:bread', { detail: { product: name } }))}>{name}<Arrow /><span>{String(i + 4).padStart(2, '0')}</span></button>)}</div>
     </div>
     <dialog className="product-dialog" ref={dialog} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       <button className="dialog-close" aria-label={t.close} onClick={() => dialog.current?.close()}><Close /></button>
