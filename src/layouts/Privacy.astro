@@ -8,6 +8,7 @@ import { brand, copy, type Locale } from '../data/content';
 import { privacyNotice, privacyPaths } from '../data/privacyNotice';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
+import Seo from '../components/Seo.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const es = locale === 'es';
@@ -20,10 +21,9 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
 <html lang={locale}>
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.title} — Artimex Bakery</title><meta name="description" content={t.description} />
-    <meta name="robots" content="noindex, nofollow" /><meta name="theme-color" content="#29231d" />
+    <Seo title={`${t.title} — Artimex Bakery`} description={t.description} locale={locale} paths={privacyPaths} />
+    <meta name="theme-color" content="#29231d" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" hreflang="es" href={privacyPaths.es} /><link rel="alternate" hreflang="en" href={privacyPaths.en} />
   </head>
   <body id="top">
     <a class="skip-link" href="#privacy-content">{copy[locale].skip}</a>

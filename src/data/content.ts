@@ -69,11 +69,14 @@ const breadPhotos = [
   { id: "bigote-danes", name: "Bigote danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Bigote-Danes.jpg", description: { es: "Pan dulce danés en su característica forma de bigote.", en: "A Danish sweet pastry with its distinctive mustache shape." } },
   { id: "cuerno-danes", name: "Cuerno danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Cuerno-Danes.jpg", description: { es: "Pan dulce danés en forma de cuerno.", en: "A horn-shaped Danish sweet pastry." } },
   { id: "feite-guayaba", name: "Feite de guayaba", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Feite-Guayaba.jpg", description: { es: "Feite de guayaba para disfrutar y compartir.", en: "A guava feite pastry to enjoy and share." } },
+  { id: "nino-envuelto", name: "Niño envuelto", type: "sweet", image: "/fotos/hero 1DSC01886-HDR.jpg", description: { es: "Bizcocho enrollado con una espiral de relleno dulce y cobertura de coco. Un clásico para acompañar el café y compartir.", en: "A rolled sponge cake with a sweet filling and coconut coating. A classic to enjoy with coffee and share." } },
+  { id: "elote-fino", name: "Elote fino", type: "sweet", image: "/fotos/hero 4Elote-Fino.jpg", description: { es: "Pan fino dulce con forma de elote y un delicado acabado de azúcar. Un favorito para disfrutar en el desayuno o la merienda.", en: "A sweet pan fino shaped like an ear of corn, with a delicate sugar finish. A favorite for breakfast or an afternoon treat." } },
+  { id: "pan-relleno", name: "Pan relleno", type: "sweet", image: "/fotos/hero3 -El Gallo Giro Mexican_.jpg", description: { es: "Pan dulce de acabado dorado con un relleno suave. Una pieza para disfrutar con tu bebida favorita y compartir en la mesa.", en: "A golden sweet bread with a soft filling. Enjoy it with your favorite drink and share it around the table." } },
 ] as const;
 
 export const products = {
-  es: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.es, kind: bread.type === 'sweet' ? 'PAN DULCE' : 'PAN SALADO' })),
-  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.en, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
+  es: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.es, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'PAN DULCE' : 'PAN SALADO' })),
+  en: breadPhotos.map(({ description, ...bread }) => ({ ...bread, description: description.en, image: `/images/breads/${bread.id}-750.webp`, thumbnail: `/images/breads/${bread.id}-375.webp`, kind: bread.type === 'sweet' ? 'SWEET BREAD' : 'SAVORY BREAD' })),
 };
 
 export const extraFamilies = ['Pan fino', 'Danés', 'Feite', 'Polvorones', 'Puerquitos', 'Galletas', 'Guayabas', 'Pan de huevo'];

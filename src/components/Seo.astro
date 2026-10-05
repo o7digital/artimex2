@@ -1,0 +1,49 @@
+---
+import { getImage } from 'astro:assets';
+import { brand, type Locale } from '../data/content';
+import { indexingEnabled } from '../data/seo';
+import logo from '../assets/artimex-logo.png';
+interface Props { title: string; description: string; locale: Locale; paths: { es: string; en: string }; business?: boolean; }
+const { title, description, locale, paths, business = false } = Astro.props;
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const canonical = absolute(paths[locale]);
+const image = absolute('/images/hero-bread.webp');
+const optimizedLogo = business ? await getImage({ src: logo, width: 660, format: 'webp' }) : null;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Bakery',
+  '@id': absolute('/#bakery'),
+  name: brand.name,
+  url: absolute('/es/'),
+  description,
+  ...(optimizedLogo ? { logo: absolute(optimizedLogo.src), image: absolute(optimizedLogo.src) } : {}),
+  telephone: '+15627770924',
+  email: brand.email,
+  faxNumber: '+15627779607',
+  address: { '@type': 'PostalAddress', streetAddress: brand.address, addressLocality: 'Santa Fe Springs', addressRegion: 'CA', postalCode: '90670', addressCountry: 'US' },
+  hasMap: brand.map,
+};
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={indexingEnabled ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
+<link rel="canonical" href={canonical} />
+<link rel="alternate" hreflang="es" href={absolute(paths.es)} />
+<link rel="alternate" hreflang="en" href={absolute(paths.en)} />
+<link rel="alternate" hreflang="x-default" href={absolute(paths.es)} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={brand.name} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={locale === 'es' ? 'es_US' : 'en_US'} />
+<meta property="og:locale:alternate" content={locale === 'es' ? 'en_US' : 'es_US'} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1672" />
+<meta property="og:image:height" content="941" />
+<meta property="og:image:alt" content={locale === 'es' ? 'Artimex Bakery — panadería mexicana' : 'Artimex Bakery — Mexican bakery'} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+{business && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}

@@ -33,7 +33,7 @@ export default function Collection({ locale }: { locale: Locale }) {
     <div className="product-grid">
       {items.map((item, i) => <article key={item.id} className="product-card" hidden={filter !== 'all' && item.type !== filter}>
         <button className="product-image-button" onClick={(event) => openProduct(i, event.currentTarget)} aria-label={`${t.view} ${item.name}`}>
-          <img src={encodeURI(item.image)} alt={item.name} width="1024" height="1280" loading="lazy" decoding="async" />
+          <img src={item.image} srcSet={`${item.thumbnail} 375w, ${item.image} 750w`} sizes="(max-width: 700px) 86vw, (max-width: 1000px) 29vw, 28vw" alt={item.name} width="750" height="450" loading="lazy" decoding="async" />
           <span className="product-view"><span>{t.details}</span><Arrow /></span>
           <span className="product-index">{String(i + 1).padStart(2, '0')}</span>
         </button>
@@ -46,7 +46,7 @@ export default function Collection({ locale }: { locale: Locale }) {
     </div>
     <dialog className="product-dialog" ref={dialog} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       <button className="dialog-close" aria-label={t.close} onClick={() => dialog.current?.close()}><Close /></button>
-      <div className="product-dialog-image"><img src={encodeURI(product.image)} alt={product.name} width="1024" height="1280" /></div>
+      <div className="product-dialog-image"><img src={product.image} alt={product.name} width="750" height="450" /></div>
       <div className="product-dialog-copy"><p className="eyebrow">{product.kind}</p><h2>{product.name}</h2><p>{product.description}</p><p className="product-contact-note">{t.contact}</p><button className="button button-dark" onClick={enquire}>{t.enquire}<Arrow /></button></div>
     </dialog>
   </div>;

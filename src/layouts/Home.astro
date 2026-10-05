@@ -16,6 +16,7 @@ import Footer from '../components/Footer.astro';
 import Careers from '../components/Careers.astro';
 import Restaurants from '../components/Restaurants.astro';
 import BreadDetails from '../components/BreadDetails.astro';
+import Seo from '../components/Seo.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -24,13 +25,11 @@ const t = copy[locale];
 <html lang={locale}>
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.title}</title><meta name="description" content={t.description} />
-    <meta name="robots" content="noindex, nofollow" /><meta name="theme-color" content="#29231d" />
-    <meta property="og:title" content={t.title} /><meta property="og:description" content={t.description} /><meta property="og:type" content="website" /><meta property="og:image" content="/images/hero-bread.webp" />
+    <Seo title={t.title} description={t.description} locale={locale} paths={{ es: '/es/', en: '/en/' }} business />
+    <meta name="theme-color" content="#29231d" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="/images/hero-bread.webp" media="(min-width: 651px)" fetchpriority="high" />
     <link rel="preload" as="image" href="/images/hero-bread-mobile.webp" media="(max-width: 650px)" fetchpriority="high" />
-    <link rel="alternate" hreflang="es" href="/es/" /><link rel="alternate" hreflang="en" href="/en/" />
   </head>
   <body>
     <a class="skip-link" href="#main">{t.skip}</a>

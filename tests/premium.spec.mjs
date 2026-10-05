@@ -43,19 +43,29 @@ for (const width of [1440, 768, 390, 320]) {
     await page.getByRole('button', { name: 'Salados', exact: true }).click();
     await expect(page.locator('.product-card:visible')).toHaveCount(0);
     await page.getByRole('button', { name: 'Dulces', exact: true }).click();
-    await expect(page.locator('.product-card:visible')).toHaveCount(9);
+    await expect(page.locator('.product-card:visible')).toHaveCount(12);
     await page.getByRole('button', { name: 'Todos', exact: true }).click();
-    await expect(page.locator('.product-card:visible')).toHaveCount(9);
+    await expect(page.locator('.product-card:visible')).toHaveCount(12);
     const photoPaths = await page.locator('.product-image-button img').evaluateAll(images => images.map(image => decodeURI(new URL(image.src).pathname)));
-    expect(new Set(photoPaths).size).toBe(9);
-    expect(photoPaths.every(path => path.startsWith('/fotos/'))).toBe(true);
-    expect(photoPaths[0]).toBe('/fotos/concha chocolate.jpg');
+    expect(new Set(photoPaths).size).toBe(12);
+    expect(photoPaths.every(path => path.startsWith('/images/breads/'))).toBe(true);
+    expect(photoPaths[0]).toBe('/images/breads/concha-chocolate-750.webp');
     await expect(page.locator('.product-card h3').first()).toHaveText('Concha Chocolate');
     await expect(page.locator('.product-card h3').nth(3)).toHaveText('Mantecadas');
     await expect(page.locator('.product-card h3').nth(4)).toHaveText('Concha de fresa');
     await expect(page.locator('.product-card h3').nth(5)).toHaveText('Puerquitos');
-    expect(photoPaths[3]).toBe('/fotos/mantecadas.jpg');
-    expect(photoPaths[5]).toBe('/fotos/El Gallo Giro Mexican_Puerquitos.jpg');
+    expect(photoPaths[3]).toBe('/images/breads/mantecadas-750.webp');
+    expect(photoPaths[5]).toBe('/images/breads/puerquitos-750.webp');
+    await expect(page.locator('.product-card h3').nth(9)).toHaveText('Niño envuelto');
+    await expect(page.locator('.product-card h3').nth(10)).toHaveText('Elote fino');
+    await expect(page.locator('.product-card h3').nth(11)).toHaveText('Pan relleno');
+    expect(photoPaths.slice(9)).toEqual(['/images/breads/nino-envuelto-750.webp', '/images/breads/elote-fino-750.webp', '/images/breads/pan-relleno-750.webp']);
+    for (const index of [9, 10, 11]) {
+      await page.locator('.product-image-button').nth(index).click();
+      await expect(page.locator('.product-dialog h2')).toHaveText(['Niño envuelto', 'Elote fino', 'Pan relleno'][index - 9]);
+      await expect(page.locator('.product-dialog-image img')).toHaveAttribute('src', photoPaths[index]);
+      await page.locator('.product-dialog').press('Escape');
+    }
     await page.locator('.product-image-button').first().click();
     await expect(page.locator('.product-dialog')).toBeVisible();
     await expect(page.locator('.product-dialog h2')).toHaveText('Concha Chocolate');
