@@ -334,3 +334,20 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .contact-form .form-status{font-size:12px;line-height:1.7;margin-top:16px;}
 .contact-form .form-status[data-state="error"]{color:#9b2818;}
 .contact-form .button:disabled{opacity:.65;cursor:wait;}
+
+/* Compact contact layout with readable details and form fields. */
+.contact-section{padding-top:56px;padding-bottom:56px;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);grid-template-rows:min-content 1fr;column-gap:6vw;row-gap:28px;align-items:start;}
+.location-heading{grid-column:1;grid-row:1;}
+.location-details{grid-column:1;grid-row:2;padding-top:0;gap:24px;}
+.contact-section .eyebrow{font-size:11px;line-height:1.6;white-space:normal;}
+.contact-section .location-details address{font-size:16px;line-height:1.7;}
+.contact-section .contact-email,.contact-section .contact-phone{font-size:16px;white-space:normal;overflow-wrap:anywhere;}
+.contact-section .location-details .text-link{font-size:13px;gap:12px;}
+.contact-section .contact-inline{grid-column:2;grid-row:1 / span 2;max-width:none;margin:0;padding:0 0 0 32px;border-top:0;border-left:1px solid var(--line);}
+.contact-section .contact-intro{font-size:16px;line-height:1.7;margin-top:16px;}
+.contact-section .contact-form label{font-size:13px;}
+.contact-section .contact-form input,.contact-section .contact-form textarea{font-size:16px;}
+.contact-section .contact-form textarea::placeholder{font-size:14px;}
+.contact-section .form-notice{font-size:12px;}
+@media(max-width:1000px){.contact-section{grid-template-columns:1fr;grid-template-rows:auto;gap:28px;}.location-heading,.location-details,.contact-section .contact-inline{grid-column:1;grid-row:auto;}.contact-section .contact-inline{border-left:0;border-top:1px solid var(--line);padding:28px 0 0;}.location-details{max-width:none;}}
+@media(max-width:700px){.contact-section{padding-top:40px;padding-bottom:44px;}.contact-section .location-details{gap:24px;}.contact-section .contact-form>.button{font-size:13px;}}

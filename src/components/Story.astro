@@ -27,10 +27,11 @@ const t = copy[locale].story;
     </div>
   </div>
   <div class="story-craft reveal">
-    <div class="story-heading"><p class="eyebrow">{t.craftEyebrow}</p><h3>{t.craftTitle}</h3></div>
+    <div class="story-craft-header"><div class="story-heading"><p class="eyebrow">{t.craftEyebrow}</p><h3>{t.craftTitle}</h3></div><p class="story-craft-intro">{t.craftIntro}</p></div>
     <ol>
-      {t.craft.map((detail, i) => <li><span class="story-number" aria-hidden="true">0{i + 1}</span><h4>{detail.title}</h4><p>{detail.text}</p></li>)}
+      {t.craft.map((detail, i) => <li><img class="craft-photo" src={`/images/breads/${detail.image}-750.webp`} alt={detail.photo} width="750" height="450" loading="lazy" decoding="async" /><span class="story-number" aria-hidden="true">0{i + 1}</span><h4>{detail.title}</h4><p>{detail.text}</p><p class="craft-tasting">{detail.note}</p></li>)}
     </ol>
+    <div class="craft-invitation"><div><h4>{t.craftClosing}</h4><p>{t.craftPairing}</p></div><a class="text-link" href="#collection">{t.craftLink}<Icon /></a></div>
   </div>
   <div class="story-audiences">
     {[t.fresh, t.wholesale].map((audience, i) => <article class="story-audience reveal">
@@ -71,6 +72,16 @@ const t = copy[locale].story;
   .story-audience dt{font-family:var(--serif);font-size:23px;line-height:1.2;}
   .story-audience dd{margin:0;font-size:12px;line-height:1.8;color:var(--muted);}
   .story-actions{display:flex;flex-wrap:wrap;align-items:center;gap:15px 25px;margin-top:12px;}
+  .story-craft-header{display:grid;grid-template-columns:1.1fr 1fr;gap:7vw;align-items:end;}
+  .story-craft-intro{font-size:16px;line-height:1.8;color:var(--muted);max-width:490px;}
+  .craft-photo{display:block;width:100%;height:auto;aspect-ratio:5/3;object-fit:cover;margin-bottom:24px;}
+  .story-number{font-size:12px;}
+  .story-craft li>p{font-size:15px;line-height:1.8;margin-top:18px;}
+  .story-craft li>p.craft-tasting{padding-top:18px;border-top:1px solid var(--line);color:var(--ink);}
+  .craft-invitation{display:flex;justify-content:space-between;align-items:center;gap:28px;background:#eae3d7;padding:28px 32px;margin-top:36px;}
+  .craft-invitation h4{font-size:32px;margin:0;}
+  .craft-invitation p{font-size:15px;line-height:1.7;color:var(--muted);max-width:620px;margin-top:10px;}
+  .craft-invitation .text-link{flex-shrink:0;font-size:13px;}
   @media(max-width:1000px){.story-craft ol{gap:25px;}.story-craft h4{font-size:26px;}.story-audience dl>div{grid-template-columns:1fr;gap:8px;}.story-origin>p:last-child{font-size:12px;}}
-  @media(max-width:700px){.story-content{padding-bottom:80px;}.story-craft{margin-top:65px;padding-top:40px;}.story-craft ol{grid-template-columns:1fr;gap:28px;margin-top:30px;}.story-craft h4{font-size:30px;margin-top:12px;}.story-audiences{grid-template-columns:1fr;gap:50px;margin-top:55px;}.story-origin>p:last-child{font-size:13px;max-width:480px;}.story-origin h3{font-size:30px;}.photo-caption{max-width:175px;right:90px;}}
+  @media(max-width:700px){.story-craft-header{grid-template-columns:1fr;gap:22px;}.story-craft-intro{font-size:16px;}.craft-invitation{display:block;padding:24px;}.craft-invitation .text-link{margin-top:22px;}.story-craft li>p{font-size:16px;}.story-content{padding-bottom:80px;}.story-craft{margin-top:65px;padding-top:40px;}.story-craft ol{grid-template-columns:1fr;gap:28px;margin-top:30px;}.story-craft h4{font-size:30px;margin-top:12px;}.story-audiences{grid-template-columns:1fr;gap:50px;margin-top:55px;}.story-origin>p:last-child{font-size:13px;max-width:480px;}.story-origin h3{font-size:30px;}.photo-caption{max-width:175px;right:90px;}}
 </style>
