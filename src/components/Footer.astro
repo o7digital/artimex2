@@ -35,7 +35,10 @@ const links = [
       <p class="footer-department">{es ? 'Departamento de ventas de Artimex Bakery' : 'Artimex Bakery Sales Department'}</p>
       <address>{brand.address}<br />{brand.city}<br />{es ? 'Estados Unidos' : 'United States'}</address>
       <a class="footer-email" href={`mailto:${brand.email}`}>{brand.email}<Icon /></a>
-      <p class="footer-phone">{es ? 'Teléfono' : 'Phone'}: <a href={brand.phoneHref}>562-777-0924</a><br />FAX: {brand.fax}</p>
+      <p class="footer-phone">
+        <a href={brand.phoneHref} aria-label={`${es ? 'Teléfono' : 'Phone'}: 562-777-0924`}><Icon name="phone" />562-777-0924</a>
+        <span class="footer-fax"><span class="sr-only">Fax: </span><Icon name="fax" />{brand.fax}</span>
+      </p>
     </div>
   </div>
   <div class="footer-top"><span>{t.footer.tagline}</span><a href="#top" class="back-to-top">{t.location.top}<Icon name="down" /></a></div>
