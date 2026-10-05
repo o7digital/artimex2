@@ -1,10 +1,11 @@
 ---
 import { breadDetails } from '../data/breadDetails';
 import Icon from './Icon.astro';
+import Logo from './Logo.astro';
 ---
 <dialog class="bread-details-dialog" id="bread-details-dialog" aria-labelledby="bread-details-title" lang="es">
   <button class="dialog-close" data-bread-close aria-label="Cerrar detalles del pan"><Icon name="close" /></button>
-  <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
+  <div class="contact-decoration" aria-hidden="true"><Logo class="dialog-logo" decorative /></div>
   <div class="contact-inner bread-details-inner">
     <p class="eyebrow">EL SABOR DE LA TRADICIÓN</p>
     {breadDetails.map((bread, i) => <article data-bread-panel={bread.name} hidden={i !== 0}>

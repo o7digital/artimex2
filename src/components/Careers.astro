@@ -2,6 +2,7 @@
 import { copy, type Locale } from '../data/content';
 import { privacyPaths } from '../data/privacyNotice';
 import Icon from './Icon.astro';
+import Logo from './Logo.astro';
 import ContactForm from './ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -23,7 +24,7 @@ const t = copy[locale].careers;
 </section>
 <dialog class="contact-dialog" id="careers-dialog" aria-labelledby="careers-dialog-title">
   <button type="button" class="dialog-close" data-careers-close aria-label={copy[locale].contact.close}><Icon name="close" /></button>
-  <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
+  <div class="contact-decoration" aria-hidden="true"><Logo class="dialog-logo" decorative /></div>
   <div class="contact-inner">
     <p class="eyebrow">{t.eyebrow}</p><h2 id="careers-dialog-title">{t.first} {t.second}</h2>
     <p class="contact-intro">{t.body}</p>

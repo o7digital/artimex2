@@ -9,6 +9,7 @@ import { privacyNotice, privacyPaths } from '../data/privacyNotice';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import Seo from '../components/Seo.astro';
+import Logo from '../components/Logo.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const es = locale === 'es';
@@ -25,10 +26,11 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
     <meta name="theme-color" content="#29231d" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body id="top">
+  <body id="top" class="privacy-page">
+    <div class="privacy-watermark" aria-hidden="true"><Logo width={1200} decorative eager /></div>
     <a class="skip-link" href="#privacy-content">{copy[locale].skip}</a>
     <header class="privacy-header section-wrap">
-      <a class="brand" href={home} aria-label="Artimex Bakery"><Icon name="wheat" class="brand-mark" /><span><span class="brand-name">ARTIMEX</span><span class="brand-subtitle">ARTISAN MEXICAN BAKERY</span></span></a>
+      <a class="brand" href={home} aria-label="Artimex Bakery"><Logo class="privacy-logo" eager /></a>
       <nav aria-label={es ? 'Navegación del aviso' : 'Notice navigation'}>
         <a class="return-home" href={home} aria-label={t.home}><span aria-hidden="true">←</span><span class="return-label">{t.home}</span></a>
         <a class="privacy-language" href={privacyPaths[other]} hreflang={other} lang={other} aria-label={es ? 'Read in English' : 'Leer en español'}>{other.toUpperCase()}</a>
@@ -57,10 +59,21 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
       </div>
     </main>
     <Footer locale={locale} page="privacy" />
+    <script>
+      const header = document.querySelector('.privacy-header');
+      const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 50);
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      updateHeader();
+    </script>
   </body>
 </html>
 <style>
-  .privacy-header{display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:102px;padding-top:22px;padding-bottom:22px;background:var(--ink);color:var(--ivory);position:sticky;top:0;z-index:30;}
+  .privacy-header{display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:102px;padding-top:22px;padding-bottom:22px;background:rgba(244,240,232,.82);color:var(--ink);position:sticky;top:0;z-index:30;transition:background .4s,color .4s,box-shadow .4s;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+  .privacy-header.is-scrolled{background:rgba(41,35,29,.97);color:#f4f0e8;box-shadow:0 8px 30px rgba(41,35,29,.12);border-bottom-color:rgba(235,219,194,.2);}
+  .privacy-header :global(.privacy-logo){width:140px;height:auto;}
+  .privacy-watermark{position:fixed;inset:0;z-index:0;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .privacy-watermark :global(img){width:min(1050px,86vw);height:auto;max-height:80vh;object-fit:contain;opacity:.065;filter:grayscale(1);transform:translate(7vw,3vh);}
+  main{position:relative;z-index:1;}
   .privacy-header nav{display:flex;align-items:center;gap:28px;font-size:16px;}
   .return-home{display:inline-flex;align-items:center;gap:12px;min-height:44px;}
   .return-home>span:first-child{font-size:22px;color:#e0c8a2;}
@@ -78,7 +91,7 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
   .notice-summary dt{margin-bottom:10px;font-family:var(--serif);font-size:25px;}
   .notice-summary dd{margin:0;color:var(--muted);font-size:16px;line-height:1.8;}
   .privacy-layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:65px;align-items:start;}
-  .privacy-sidebar{position:sticky;top:130px;}
+  .privacy-sidebar{position:sticky;top:155px;}
   .privacy-sidebar ol{display:grid;gap:8px;margin-top:18px;padding:0;list-style:none;}
   .privacy-sidebar li a{display:grid;min-height:44px;align-items:start;grid-template-columns:23px minmax(0,1fr);gap:9px;padding:5px 0;color:var(--muted);font-size:15px;line-height:1.6;}
   .privacy-sidebar li span{color:#887051;}
@@ -86,7 +99,7 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
   .sidebar-contact{margin-top:28px;padding-top:23px;border-top:1px solid var(--line);}
   .sidebar-contact>a{display:block;width:fit-content;margin-top:12px;font-size:16px;text-decoration:underline;text-underline-offset:4px;}
   .legal-content{min-width:0;max-width:780px;overflow-wrap:anywhere;}
-  .legal-content>section{padding-bottom:36px;margin-bottom:35px;border-bottom:1px solid var(--line);scroll-margin-top:30px;}
+  .legal-content>section{padding-bottom:36px;margin-bottom:35px;border-bottom:1px solid var(--line);scroll-margin-top:60px;}
   .section-number{margin-bottom:11px;color:#887051;font-size:14px;}
   .legal-content h2{margin-bottom:23px;font-size:clamp(30px,2.7vw,40px);line-height:1.12;letter-spacing:-.025em;}
   .legal-content section>p:not(.section-number),.legal-content li{color:#62594e;font-size:18px;line-height:1.85;}
@@ -114,5 +127,5 @@ const requestLink = `mailto:${brand.email}?subject=${encodeURIComponent(t.reques
   .privacy-contact a{text-decoration:underline;text-underline-offset:3px;}
   @media(max-width:1100px){.privacy-layout{grid-template-columns:200px minmax(0,1fr);gap:35px;}}
   @media(max-width:820px){main{padding-top:55px;padding-bottom:65px;}.privacy-layout{grid-template-columns:1fr;gap:40px;}.privacy-sidebar{position:static;padding-bottom:30px;border-bottom:1px solid var(--line);}.privacy-sidebar ol{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 23px;}.sidebar-contact{display:none;}.notice-summary{margin-bottom:35px;padding:25px;}.notice-summary dl{grid-template-columns:1fr;gap:20px;}.notice-summary dt{margin-bottom:6px;}}
-  @media(max-width:650px){.privacy-header{gap:15px;min-height:88px;padding-top:15px;padding-bottom:15px;}.privacy-header nav{gap:12px;}.return-label{display:none;}.return-home{gap:0;}.privacy-sidebar ol{grid-template-columns:1fr;}.privacy-contact{padding:25px;}.privacy-contact dl>div{grid-template-columns:58px minmax(0,1fr);gap:8px;font-size:16px;}.request-button{width:100%;font-size:15px;gap:20px;}.information-categories{padding:20px;}.privacy-hero h1{font-size:clamp(58px,14vw,80px);}}
+  @media(max-width:650px){.privacy-header :global(.privacy-logo){width:105px;}.privacy-watermark :global(img){width:105vw;max-width:none;transform:translate(0,3vh);opacity:.05;}.privacy-header{gap:15px;min-height:88px;padding-top:15px;padding-bottom:15px;}.privacy-header nav{gap:12px;}.return-label{display:none;}.return-home{gap:0;}.privacy-sidebar ol{grid-template-columns:1fr;}.privacy-contact{padding:25px;}.privacy-contact dl>div{grid-template-columns:58px minmax(0,1fr);gap:8px;font-size:16px;}.request-button{width:100%;font-size:15px;gap:20px;}.information-categories{padding:20px;}.privacy-hero h1{font-size:clamp(58px,14vw,80px);}}
 </style>

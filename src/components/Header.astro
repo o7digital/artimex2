@@ -1,7 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { Image } from 'astro:assets';
-import artimexLogo from '../assets/artimex-logo.png';
+import Logo from './Logo.astro';
 import { copy, type Locale } from '../data/content';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -9,7 +8,7 @@ const t = copy[locale].nav;
 ---
 <header class="site-header" id="site-header">
   <a class="brand header-brand" href="#top" aria-label="Artimex Bakery">
-    <Image src={artimexLogo} alt="Artimex Artisan Mexican Bakery" width={330} format="webp" class="header-logo" loading="eager" />
+    <Logo class="header-logo" eager />
   </a>
   <nav class="desktop-nav" aria-label={locale === 'es' ? 'Navegación principal' : 'Main navigation'}>
     <a href="#collection">{t.collection}</a><a href="#story">{t.story}</a><a href="#careers">{t.careers}</a><a href="#contact">{t.contact}</a>

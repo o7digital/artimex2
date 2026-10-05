@@ -1,0 +1,7 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/artimex-logo.png';
+interface Props { class?: string; width?: number; decorative?: boolean; eager?: boolean; }
+const { class: className = '', width = 330, decorative = false, eager = false } = Astro.props;
+---
+<Image src={logo} alt={decorative ? '' : 'Artimex Artisan Mexican Bakery'} width={width} format="webp" class:list={['artimex-logo', className]} loading={eager ? 'eager' : 'lazy'} aria-hidden={decorative ? 'true' : undefined} />

@@ -11,7 +11,7 @@ for (const width of [1440, 768, 390, 320]) {
     await page.evaluate(() => document.fonts.ready);
     await expect(page).toHaveTitle('Artimex Bakery — Concha box demo');
     expect(await page.evaluate(() => document.fonts.check('32px Italiana') && document.fonts.check('14px "DM Sans"'))).toBe(true);
-    await expect.poll(() => page.evaluate(() => [...document.images].every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+    await expect.poll(() => page.evaluate(() => [...document.images].filter(image => image.loading !== "lazy" || image.getBoundingClientRect().top < innerHeight).every(image => image.complete && image.naturalWidth > 0))).toBe(true);
     const overflow = await page.evaluate(() => [...document.querySelectorAll('#masa-preview *')].filter(element => {
       const bounds = element.getBoundingClientRect();
       return bounds.width && (bounds.right > innerWidth + 1 || bounds.left < -1);

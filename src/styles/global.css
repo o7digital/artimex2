@@ -35,7 +35,7 @@ address{font-style:normal;}
 
 /* Navigation */
 .site-header{position:fixed;z-index:30;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:space-between;gap:32px;padding:27px 4.3vw;color:var(--ivory);transition:padding .35s,background .35s,color .35s;}
-.site-header.is-scrolled{padding-top:15px;padding-bottom:15px;color:var(--ink);background:rgba(244,240,232,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(12px);}
+.site-header.is-scrolled{padding-top:15px;padding-bottom:15px;color:var(--ivory);background:rgba(41,35,29,.97);border-bottom:1px solid rgba(235,219,194,.2);backdrop-filter:blur(12px);}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .brand-mark{width:31px;height:44px;stroke-width:.8;}
 .brand>span{display:flex;flex-direction:column;align-items:center;}
@@ -53,8 +53,8 @@ address{font-style:normal;}
 .header-business{display:flex;align-items:center;gap:21px;border:1px solid rgba(244,240,232,.45);padding:13px 17px;font-size:14px;font-weight:400;transition:background .2s;}
 .header-business svg{width:18px;height:18px;}
 .header-business:hover{background:rgba(255,255,255,.13);}
-.is-scrolled .header-business{border-color:var(--line);}
-.is-scrolled .header-business:hover{background:var(--paper);}
+.is-scrolled .header-business{border-color:rgba(244,240,232,.45);}
+.is-scrolled .header-business:hover{background:rgba(255,255,255,.13);}
 .menu-toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:transparent;}
 .menu-toggle span{width:22px;height:1px;background:currentColor;transition:transform .3s;}
 .mobile-menu{position:fixed;inset:0;z-index:-1;background:var(--ivory);color:var(--ink);padding:160px 7vw 50px;overflow-y:auto;}
@@ -363,3 +363,9 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .site-footer .brand-subtitle{font-size:11px;letter-spacing:.07em;line-height:1.6;margin-top:5px;}
 .site-footer .footer-top{flex-wrap:wrap;gap:12px 24px;}
 .site-footer .footer-bottom a{display:inline-flex;align-items:center;min-height:44px;}
+
+.artimex-logo{display:block;height:auto;}
+.footer-logo{width:210px;max-width:100%;}
+.contact-decoration .dialog-logo{width:180px;height:auto;max-width:100%;}
+.privacy-page{isolation:isolate;}
+.privacy-page .site-footer{position:relative;z-index:1;}

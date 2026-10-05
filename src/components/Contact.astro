@@ -1,6 +1,7 @@
 ---
 import { copy, type Locale } from '../data/content';
 import Icon from './Icon.astro';
+import Logo from './Logo.astro';
 import ContactForm from './ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -8,7 +9,7 @@ const t = copy[locale].contact;
 ---
 <dialog class="contact-dialog" id="contact-dialog" data-product={t.product}>
   <button class="dialog-close" id="contact-close" aria-label={t.close}><Icon name="close" /></button>
-  <div class="contact-decoration" aria-hidden="true"><Icon name="wheat" /><span>ARTIMEX</span></div>
+  <div class="contact-decoration" aria-hidden="true"><Logo class="dialog-logo" decorative /></div>
   <div class="contact-inner">
     <p class="eyebrow">{t.eyebrow}</p><h2>{t.title}</h2><p class="contact-intro">{t.body}</p>
     <ContactForm locale={locale} id="contact-form" />
