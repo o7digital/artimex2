@@ -60,10 +60,9 @@ export const slides = {
 };
 
 const breadPhotos = [
-  { id: "conchas", name: "Conchas", type: "sweet", image: "/fotos/El Gallo Giro Mexican_conchas.jpg", description: { es: "Selección de conchas tradicionales mexicanas.", en: "A selection of traditional Mexican conchas." } },
+  { id: "concha-chocolate", name: "Concha Chocolate", type: "sweet", image: "/fotos/concha chocolate.jpg", description: { es: "Concha con cubierta de chocolate.", en: "Concha with a chocolate topping." } },
   { id: "concha-blanca", name: "Concha blanca", type: "sweet", image: "/fotos/El Gallo Giro Mexican_concha_white.jpg", description: { es: "Concha con cubierta blanca de azúcar.", en: "Concha with a white sugar topping." } },
   { id: "concha-mocha", name: "Concha mocha", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_mocha.jpg", description: { es: "Concha mocha para acompañar tu café.", en: "A mocha concha to enjoy with your coffee." } },
-  { id: "concha-chocolate", name: "Concha de chocolate", type: "sweet", image: "/fotos/El Gallo Giro Mexican_xonxha_choclate.jpg", description: { es: "Concha con cubierta de chocolate.", en: "Concha with a chocolate topping." } },
   { id: "concha-fresa", name: "Concha de fresa", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Concha_strawberry.jpg", description: { es: "Concha de fresa para un momento dulce.", en: "A strawberry concha for a sweet moment." } },
   { id: "bolillo", name: "Bolillo", type: "savory", image: "/fotos/El Gallo Giro Mexican_Bolillo.jpg", description: { es: "Un clásico de la mesa mexicana para acompañar tus comidas.", en: "A Mexican table classic to enjoy with your meals." } },
   { id: "bigote-danes", name: "Bigote danés", type: "sweet", image: "/fotos/El Gallo Giro Mexican_Bigote-Danes.jpg", description: { es: "Pan dulce danés en su característica forma de bigote.", en: "A Danish sweet pastry with its distinctive mustache shape." } },
