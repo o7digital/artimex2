@@ -17,6 +17,7 @@ import Careers from '../components/Careers.astro';
 import Restaurants from '../components/Restaurants.astro';
 import BreadDetails from '../components/BreadDetails.astro';
 import Seo from '../components/Seo.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import ContactForm from '../components/ContactForm.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -25,6 +26,7 @@ const t = copy[locale];
 <!doctype html>
 <html lang={locale}>
   <head>
+    <GoogleAnalytics />
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <Seo title={t.title} description={t.description} locale={locale} paths={{ es: '/es/', en: '/en/' }} business />
     <meta name="theme-color" content="#29231d" />

@@ -1,4 +1,4 @@
-// Notice copied from the published Artimex website, preserving its wording and date.
+// Privacy notice for the Artimex website.
 import type { Locale } from './content';
 
 export const privacyPaths = { es: '/es/aviso-de-privacidad/', en: '/en/privacy-notice/' };
@@ -20,18 +20,18 @@ interface PrivacyCopy {
 }
 
 export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = {
-  updated: '2026-09-28',
+  updated: '2026-10-06',
   en: {
     title: 'Privacy notice', titleLead: 'Privacy', titleEm: 'notice.',
     description: 'How Artimex Bakery handles website and inquiry information, your California and U.S. privacy rights, and how to contact us.',
-    eyebrow: 'Artimex Bakery · Website information', updated: 'Effective & last updated: September 28, 2026',
+    eyebrow: 'Artimex Bakery · Website information', updated: 'Effective & last updated: October 6, 2026',
     intro: 'Understand what information is involved when you visit Artimex, contact our team or explore a bakery program — and how to ask about your privacy.',
     home: 'Return home', contents: 'In this notice', contact: 'Privacy contact', department: 'Artimex Bakery Sales Department',
     phone: 'Phone', request: 'Make a privacy request', requestSubject: 'Artimex privacy request',
     summaryTitle: 'At a glance',
     summary: [
       ['Scope', 'The website and inquiries initiated through it.'],
-      ['Tracking', 'No analytics or advertising trackers are currently active on this website.'],
+      ['Tracking', 'Google Analytics measures website usage.'],
       ['Your options', 'Contact us by email, telephone or postal mail.'],
     ],
     categoriesTitle: 'Information, sources and purposes',
@@ -91,7 +91,7 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
       {
         id: 'cookies', title: 'Cookies, analytics and browser signals',
         paragraphs: [
-          'No Google Analytics, advertising pixel, newsletter tracker or optional analytics or advertising cookie is currently enabled on this website. Product selections do not create persistent cookies or local-storage entries. Hosting and security services may still process technical requests needed to serve and protect the site.',
+          'This website uses Google Analytics to measure visits and website usage. Google Analytics may use cookies and process information about pages visited, browser, device and interactions. Product selections do not create persistent cookies or local-storage entries. Hosting and security services may still process technical requests needed to serve and protect the site.',
           'The website does not track you across other websites for advertising. It does not change its behavior in response to the older Do Not Track (DNT) signal because that cross-site tracking is not performed.',
           'Global Privacy Control (GPC) communicates a choice to opt out of sale or sharing. The current website has no sale or cross-context advertising sharing to disable; that remains the case when a GPC signal is present. If applicable processing is introduced, a legally required opt-out signal will be honored and the relevant controls and notice will be updated.',
           'If analytics or advertising tools are added, this notice will describe the tools, information, purposes, retention and available choices before they are activated. Any legally required consent or opt-out mechanism will be provided. You can also review cookie and privacy settings in your browser.',
@@ -161,14 +161,14 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
   es: {
     title: 'Aviso de privacidad', titleLead: 'Aviso de', titleEm: 'privacidad.',
     description: 'Cómo Artimex Bakery trata la información del sitio y las consultas, tus derechos en California y Estados Unidos y cómo contactarnos.',
-    eyebrow: 'Artimex Bakery · Información del sitio', updated: 'Vigencia y última actualización: 28 de septiembre de 2026',
+    eyebrow: 'Artimex Bakery · Información del sitio', updated: 'Vigencia y última actualización: 6 de octubre de 2026',
     intro: 'Conoce qué información interviene cuando visitas Artimex, contactas a nuestro equipo o exploras un programa de panadería, y cómo consultar sobre tu privacidad.',
     home: 'Volver al inicio', contents: 'En este aviso', contact: 'Contacto de privacidad', department: 'Departamento de Ventas de Artimex Bakery',
     phone: 'Teléfono', request: 'Enviar una solicitud de privacidad', requestSubject: 'Solicitud de privacidad Artimex',
     summaryTitle: 'Lo esencial',
     summary: [
       ['Alcance', 'El sitio web y las consultas iniciadas a través de él.'],
-      ['Seguimiento', 'Actualmente no hay herramientas de analítica ni seguimiento publicitario activas en este sitio.'],
+      ['Seguimiento', 'Google Analytics mide el uso del sitio web.'],
       ['Tus opciones', 'Contáctanos por correo electrónico, teléfono o correo postal.'],
     ],
     categoriesTitle: 'Información, fuentes y finalidades',
@@ -228,7 +228,7 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
       {
         id: 'cookies', title: 'Cookies, analítica y señales del navegador',
         paragraphs: [
-          'Actualmente este sitio no activa Google Analytics, píxeles publicitarios, seguimiento de boletines ni cookies opcionales de analítica o publicidad. La selección de productos no crea cookies persistentes ni entradas de almacenamiento local. Los servicios de alojamiento y seguridad pueden tratar las solicitudes técnicas necesarias para servir y proteger el sitio.',
+          'Este sitio utiliza Google Analytics para medir las visitas y el uso del sitio web. Google Analytics puede utilizar cookies y tratar información sobre las páginas visitadas, el navegador, el dispositivo y las interacciones. La selección de productos no crea cookies persistentes ni entradas de almacenamiento local. Los servicios de alojamiento y seguridad pueden tratar las solicitudes técnicas necesarias para servir y proteger el sitio.',
           'El sitio no realiza seguimiento entre diferentes sitios para fines publicitarios. No cambia su comportamiento ante la señal antigua Do Not Track (DNT) porque no realiza ese seguimiento.',
           'Global Privacy Control (GPC) comunica una opción de excluirse de la venta o del intercambio de datos. El sitio actual no realiza ventas ni intercambios para publicidad entre contextos que deban desactivarse; esto se mantiene cuando hay una señal GPC. Si se incorpora un tratamiento aplicable, se respetará la señal de exclusión exigida por ley y se actualizarán los controles y el aviso.',
           'Si se añaden herramientas de analítica o publicidad, este aviso describirá las herramientas, datos, finalidades, conservación y opciones antes de activarlas. Se proporcionará el consentimiento o mecanismo de exclusión que exija la ley. También puedes revisar las opciones de cookies y privacidad de tu navegador.',
