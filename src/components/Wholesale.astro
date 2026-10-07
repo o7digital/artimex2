@@ -1,0 +1,39 @@
+---
+import type { Locale } from '../data/content';
+import Icon from './Icon.astro';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const es = locale === 'es';
+const cards = es ? [
+  { title: 'Pan mexicano al mayoreo en Santa Fe Springs', body: 'Artimex es una panadería mexicana en Santa Fe Springs. Si buscas un proveedor de pan mexicano para tu negocio, contacta a nuestro equipo en 12764 Florence Avenue para consultar productos y presentaciones.' },
+  { title: 'Pan dulce y conchas al mayoreo', body: 'Consulta nuestras opciones de pan dulce al mayoreo en Santa Fe Springs, incluyendo conchas y bolillos. Nuestro equipo te orientará sobre variedades, disponibilidad y cantidades para tu negocio.' },
+  { title: 'Pan mexicano para restaurantes en Los Ángeles', body: '¿Buscas una panadería mexicana al mayoreo o un proveedor de pan mexicano para un restaurante en Los Ángeles? Cuéntanos qué panes necesitas y dónde se encuentra tu negocio para consultar las opciones de suministro.' },
+  { title: 'Pan mexicano para supermercados y cafeterías', body: 'Consulta pan dulce al mayoreo y conchas para tu supermercado, o pan mexicano para cafeterías en Los Ángeles. Comparte tu ubicación, volumen y frecuencia de compra para que nuestro equipo pueda revisar las opciones.' },
+] : [
+  { title: 'Wholesale Mexican bread in Santa Fe Springs', body: 'Artimex Bakery is a Mexican bakery in Santa Fe Springs. If you are looking for a Mexican bread supplier for your business, contact our team at 12764 Florence Avenue to discuss products and packaging options.' },
+  { title: 'Pan dulce and wholesale conchas', body: 'Ask about pan dulce wholesale in Santa Fe Springs, including conchas and bolillos. Our team can help with varieties, availability and quantities for your business.' },
+  { title: 'Mexican bread for restaurants in Los Angeles', body: 'Looking for a wholesale Mexican bakery or a Mexican bread supplier for a restaurant in Los Angeles? Tell us which breads you need and where your business is located to discuss supply options.' },
+  { title: 'Mexican bakery products for grocery stores and cafes', body: 'Ask about pan dulce wholesale and wholesale conchas for your grocery store, or Mexican bread for cafes in Los Angeles. Share your location, volume and purchasing frequency so our team can review the options.' },
+];
+---
+<section class="wholesale-section section-wrap" id="wholesale" aria-labelledby="wholesale-title">
+  <p class="eyebrow">{es ? 'SANTA FE SPRINGS · LOS ÁNGELES' : 'SANTA FE SPRINGS · LOS ANGELES'}</p>
+  <h2 id="wholesale-title">{es ? 'Pan mexicano para' : 'Mexican bread for'}<br /><em>{es ? 'tu negocio.' : 'your business.'}</em></h2>
+  <div class="wholesale-grid">
+    {cards.map(card => <article><h3>{card.title}</h3><p>{card.body}</p></article>)}
+  </div>
+  <p class="wholesale-coverage">{es ? 'La disponibilidad, las cantidades, las opciones de entrega y la cobertura se confirman directamente con nuestro equipo comercial para cada ubicación.' : 'Availability, quantities, delivery options and coverage are confirmed directly with our sales team for each location.'}</p>
+  <button class="text-link" data-contact>{es ? 'Consultar pan al mayoreo' : 'Ask about wholesale bread'}<Icon /></button>
+</section>
+<style>
+  .wholesale-section{padding-top:72px;padding-bottom:72px;border-bottom:1px solid var(--line);}
+  h2{font-size:clamp(42px,4.5vw,66px);line-height:1.08;margin-top:20px;}
+  h2 em{color:#887051;}
+  .wholesale-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px 64px;margin-top:40px;}
+  article{min-width:0;}
+  h3{font-size:clamp(26px,2.5vw,34px);line-height:1.2;}
+  article p{font-size:14px;line-height:1.85;color:var(--muted);margin-top:14px;max-width:560px;}
+  .wholesale-coverage{font-size:13px;line-height:1.8;color:var(--muted);margin-top:36px;max-width:760px;}
+  .text-link{margin-top:20px;}
+  @media(max-width:700px){.wholesale-section{padding-top:48px;padding-bottom:48px;}.wholesale-grid{grid-template-columns:1fr;gap:28px;margin-top:28px;}h3{font-size:29px;}}
+</style>
