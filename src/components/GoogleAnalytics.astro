@@ -1,3 +1,7 @@
+---
+const enabled = import.meta.env.PROD && process.env.VERCEL_ENV !== 'preview';
+---
+{enabled && <>
 <!-- Google tag (gtag.js) -->
 <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-XYW57L5XTR"></script>
 <script is:inline>
@@ -6,3 +10,4 @@
   gtag('js', new Date());
   gtag('config', 'G-XYW57L5XTR');
 </script>
+</>}

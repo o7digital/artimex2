@@ -4,7 +4,7 @@ for (const width of [1440, 390]) {
   test(`Restaurant directory at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/#business');
+    await page.goto('/es/#business');
     const trigger = page.getByRole('button', { name: '01 Restaurantes' });
     await trigger.click();
     const dialog = page.getByRole('dialog', { name: 'Nuestros restaurantes.' });

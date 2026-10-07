@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const site = process.env.PUBLIC_SITE_URL || 'https://artimex2.vercel.app';
+const site = process.env.PUBLIC_SITE_URL || 'https://www.artimexbakery.com';
+const indexingEnabled = process.env.VERCEL_ENV !== 'preview' && process.env.SEO_NOINDEX !== 'true';
 const url = path => new URL(path, site).href;
 const routes = [
   ['/', 'en', '/en/'],
@@ -15,10 +16,11 @@ for (const [route, lang, canonical] of routes) {
     expect(response.status()).toBe(200);
     const html = await response.text();
     expect(html).toMatch(new RegExp(`<html\\s[^>]*lang="${lang}"`));
-    expect(html).toContain('content="index, follow, max-image-preview:large"');
+    expect(html).toContain(indexingEnabled ? 'content="index, follow, max-image-preview:large"' : 'content="noindex, follow"');
     expect(html).toContain(`<link rel="canonical" href="${url(canonical)}">`);
     expect(html).toContain(`property="og:url" content="${url(canonical)}"`);
     expect(html).toContain('name="twitter:card" content="summary_large_image"');
+    expect(html.includes('https://www.googletagmanager.com/gtag/js?id=G-XYW57L5XTR')).toBe(process.env.VERCEL_ENV !== 'preview');
     const languages = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)];
     expect(languages.map(match => match[1])).toEqual(['es', 'en', 'x-default']);
     expect(languages[2][2]).toBe(languages[1][2]);
@@ -48,7 +50,7 @@ for (const [route, lang, canonical] of routes) {
 test('Crawl files include canonical routes and exclude the box demo', async ({ request }) => {
   const robots = await request.get('/robots.txt');
   expect(robots.status()).toBe(200);
-  expect(await robots.text()).toContain(`Allow: /\n\nSitemap: ${url('/sitemap.xml')}`);
+  expect(await robots.text()).toContain(`${indexingEnabled ? 'Allow: /' : 'Disallow: /'}\n\nSitemap: ${url('/sitemap.xml')}`);
   const sitemap = await request.get('/sitemap.xml');
   expect(sitemap.status()).toBe(200);
   expect(sitemap.headers()['content-type']).toContain('xml');
