@@ -20,6 +20,7 @@ import BreadDetails from '../components/BreadDetails.astro';
 import Seo from '../components/Seo.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import ContactForm from '../components/ContactForm.astro';
+import OliviaChat from '../components/OliviaChat.astro';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
@@ -69,6 +70,7 @@ const t = copy[locale];
     <Contact locale={locale} />
     <Restaurants locale={locale} />
     <BreadDetails />
+    <OliviaChat locale={locale} />
     <script>
       const oldSections: Record<string, string> = { '#masa-home': '#top', '#masa-story': '#story', '#masa-collection': '#collection' };
       const restoreSection = () => {

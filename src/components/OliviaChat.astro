@@ -1,0 +1,133 @@
+---
+import type { Locale } from '../data/content';
+import Icon from './Icon.astro';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const en = locale === 'en';
+const t = en ? {
+  open: 'Ask Olivia', close: 'Close chat', assistant: 'Artimex assistant', greeting: 'A little guidance.\nA lot of good bread.', welcome: 'Hello, I’m Olivia, Artimex’s AI assistant. Let’s find the right bread for your table or your business. How can I help?', placeholder: 'What do you have in mind?', send: 'Send message', thinking: 'Olivia is thinking…', error: 'Olivia couldn’t answer just now. Please try again or contact our team.', retry: 'Try again', privacy: 'Privacy notice', notice: 'Messages are processed by Olivia AI.', contact: 'Contact our team', prompts: ['Discover our breads', 'Bread for my business', 'Where to find us'], label: 'Conversation with Olivia',
+} : {
+  open: 'Habla con Olivia', close: 'Cerrar chat', assistant: 'Asistente Artimex', greeting: 'Un poco de orientación.\nMucho buen pan.', welcome: 'Hola, soy Olivia, la asistente de IA de Artimex. Encontremos el pan ideal para tu mesa o tu negocio. ¿Cómo puedo ayudarte?', placeholder: '¿Qué tienes en mente?', send: 'Enviar mensaje', thinking: 'Olivia está pensando…', error: 'Olivia no pudo responder en este momento. Intenta de nuevo o contacta a nuestro equipo.', retry: 'Reintentar', privacy: 'Aviso de privacidad', notice: 'Olivia IA procesa los mensajes.', contact: 'Contacta a nuestro equipo', prompts: ['Descubrir nuestros panes', 'Pan para mi negocio', 'Dónde encontrarnos'], label: 'Conversación con Olivia',
+};
+---
+<div class="olivia" data-language={locale} data-thinking={t.thinking} data-error={t.error} data-retry={t.retry}>
+  <section class="olivia-panel" id="olivia-panel" role="dialog" aria-labelledby="olivia-title" hidden>
+    <header class="olivia-header">
+      <span class="olivia-monogram" aria-hidden="true">✦</span>
+      <div><h2 id="olivia-title">Olivia AI</h2><p class="olivia-status"><i aria-hidden="true"></i>{t.assistant}</p></div>
+      <button class="olivia-close" type="button" aria-label={t.close}><Icon name="close" /></button>
+    </header>
+    <div class="olivia-messages" role="log" aria-label={t.label} aria-live="polite" aria-relevant="additions text" tabindex="0">
+      <div class="olivia-intro"><span aria-hidden="true">✦</span><h3>{t.greeting}</h3><p>{t.welcome}</p></div>
+    </div>
+    <div class="olivia-prompts">{t.prompts.map(prompt => <button type="button">{prompt}<Icon /></button>)}</div>
+    <div class="olivia-feedback" role="status" hidden></div>
+    <form class="olivia-form">
+      <label class="olivia-sr" for="olivia-input">{t.placeholder}</label>
+      <input id="olivia-input" name="message" placeholder={t.placeholder} maxlength="2000" required autocomplete="off" />
+      <button type="submit" aria-label={t.send}><Icon /></button>
+    </form>
+    <p class="olivia-privacy">{t.notice} <a href={en ? '/en/privacy-notice/' : '/es/aviso-de-privacidad/'} target="_blank" rel="noopener noreferrer">{t.privacy}</a></p>
+    <button class="olivia-contact" type="button">{t.contact}<Icon /></button>
+  </section>
+  <button class="olivia-toggle" type="button" aria-label={t.open} aria-controls="olivia-panel" aria-expanded="false"><span class="olivia-sr">{t.open}</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/></svg></button>
+</div>
+<script>
+  const root = document.querySelector<HTMLElement>('.olivia')!;
+  const panel = root.querySelector<HTMLElement>('.olivia-panel')!;
+  const toggle = root.querySelector<HTMLButtonElement>('.olivia-toggle')!;
+  const input = root.querySelector<HTMLInputElement>('#olivia-input')!;
+  const form = root.querySelector<HTMLFormElement>('.olivia-form')!;
+  const submit = form.querySelector<HTMLButtonElement>('button')!;
+  const messages = root.querySelector<HTMLElement>('.olivia-messages')!;
+  const prompts = root.querySelector<HTMLElement>('.olivia-prompts')!;
+  const feedback = root.querySelector<HTMLElement>('.olivia-feedback')!;
+  let conversation: string | undefined;
+  let busy = false;
+  let pending = '';
+  let latestMessage = '';
+  function open(value: boolean) {
+    panel.hidden = !value;
+    toggle.setAttribute('aria-expanded', String(value));
+    if (value) { if (busy) panel.querySelector<HTMLButtonElement>('.olivia-close')!.focus(); else input.focus(); }
+    else toggle.focus();
+  }
+  toggle.addEventListener('click', () => open(panel.hidden));
+  root.querySelector('.olivia-close')!.addEventListener('click', () => open(false));
+  root.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) { event.stopPropagation(); open(false); } });
+  root.querySelector('.olivia-contact')!.addEventListener('click', () => {
+    open(false);
+    window.dispatchEvent(new CustomEvent('artimex:contact'));
+    if (latestMessage) {
+      const field = document.querySelector<HTMLTextAreaElement>('#contact-form [name="message"]');
+      if (field && !field.value) field.value = latestMessage;
+    }
+  });
+  function add(role: 'user' | 'assistant', text: string) {
+    const bubble = document.createElement('div');
+    bubble.className = `olivia-message ${role}`;
+    bubble.textContent = text;
+    messages.append(bubble);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  async function send(message: string, retry = false) {
+    if (busy || !message.trim()) return;
+    busy = true; pending = message; latestMessage = message;
+    input.value = ''; input.disabled = true; submit.disabled = true; prompts.hidden = true;
+    if (!retry) add('user', message);
+    feedback.replaceChildren(document.createTextNode(root.dataset.thinking!));
+    feedback.hidden = false; feedback.dataset.state = 'thinking';
+    try {
+      const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.language, conversation }), signal: AbortSignal.timeout(60000) });
+      if (!response.ok) throw new Error('Unavailable');
+      const data = await response.json();
+      if (typeof data.answer !== 'string' || !data.answer.trim() || typeof data.conversation !== 'string') throw new Error('Invalid response');
+      root.dataset.connection = 'ready'; conversation = data.conversation; add('assistant', data.answer); pending = ''; feedback.hidden = true;
+    } catch {
+      root.dataset.connection = 'error'; feedback.textContent = root.dataset.error!; feedback.dataset.state = 'error';
+      const retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.textContent = root.dataset.retry!;
+      retryButton.addEventListener('click', () => void send(pending, true)); feedback.append(retryButton);
+    } finally {
+      busy = false; input.disabled = false; submit.disabled = false;
+      if (!panel.hidden && root.contains(document.activeElement) && document.activeElement !== root.querySelector('.olivia-close') && document.activeElement !== root.querySelector('.olivia-contact')) input.focus();
+    }
+  }
+  form.addEventListener('submit', event => { event.preventDefault(); void send(input.value.trim()); });
+  prompts.querySelectorAll('button').forEach(button => button.addEventListener('click', () => void send(button.firstChild!.textContent!.trim())));
+</script>
+<style is:global>
+.olivia{position:fixed;right:24px;bottom:max(22px,env(safe-area-inset-bottom));z-index:90;font-family:'DM Sans',sans-serif;color:#29231c;font-size:14px;line-height:1.5}
+.olivia [hidden]{display:none!important}.olivia button,.olivia input{font:inherit}.olivia button{cursor:pointer}.olivia svg{flex-shrink:0;width:20px;height:20px}.olivia :focus-visible{outline:2px solid #a77a44;outline-offset:4px}
+.olivia-toggle{display:flex;align-items:center;gap:12px;border:1px solid #9c805c;padding:8px 17px 8px 8px;border-radius:40px;background:#29231c;color:#fff7e9;box-shadow:0 8px 32px #29231c26;font-size:13px!important;transition:transform .2s,box-shadow .2s}.olivia-toggle:hover{transform:translateY(-3px);box-shadow:0 12px 36px #29231c38}.olivia-toggle>svg{margin-left:4px;color:#d7bd95}
+.olivia-monogram{position:relative;display:grid;place-items:center;flex-shrink:0;width:43px;height:43px;border:1px solid #c6a779;border-radius:50%;background:linear-gradient(140deg,#b08d5f,#715638);color:#fff7e9;font-family:'Cormorant Garamond',serif;font-size:34px;line-height:1}.olivia-monogram>span{position:absolute;right:-3px;bottom:0;font-family:serif;font-size:15px;color:#e9cd9f;background:#29231c;border-radius:50%;padding:2px}
+.olivia-panel{position:absolute;bottom:76px;right:0;display:flex;flex-direction:column;width:min(410px,calc(100vw - 32px));height:min(660px,calc(100dvh - 118px));overflow:hidden;background:#f5f1e9;border:1px solid #b49b793f;border-radius:22px;box-shadow:0 24px 90px #29231c38,0 4px 20px #29231c14;animation:olivia-enter .25s ease-out;transform-origin:bottom right}
+.olivia-header{display:flex;align-items:center;gap:13px;padding:22px;background:#29231c;color:#fff7e9;border-bottom:1px solid #b49b79}.olivia-header p{font-size:8px;letter-spacing:.16em;color:#d7bd95;margin:0 0 3px}.olivia-header h2{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;line-height:1;margin:0}.olivia-header h2>span{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.1em;vertical-align:middle;border:1px solid #d7bd954f;border-radius:4px;padding:3px 5px;margin-left:5px;color:#d7bd95}.olivia-close{display:grid;place-items:center;margin-left:auto;width:36px;height:36px;border:1px solid #d7bd9533;border-radius:50%;background:transparent;color:#fff7e9}
+.olivia-messages{flex:1;min-height:90px;overflow:auto;overscroll-behavior:contain;padding:24px;display:flex;flex-direction:column;gap:15px;scrollbar-width:thin;scrollbar-color:#cbbda8 transparent}.olivia-intro{flex-shrink:0;padding:5px 0 10px}.olivia-intro>span{color:#947249;font-size:23px}.olivia-intro h3{font-family:'Cormorant Garamond',serif;font-size:34px;line-height:1.05;letter-spacing:-.02em;font-weight:400;white-space:pre-line;margin:12px 0 16px}.olivia-intro p{font-size:13px;color:#71685d;line-height:1.8;margin:0}
+.olivia-message{flex-shrink:0;max-width:94%;white-space:pre-wrap;overflow-wrap:anywhere;padding:13px 15px;font-size:13px;line-height:1.7;border-radius:15px}.olivia-message.assistant{align-self:flex-start;border:1px solid #dcd1bf;background:#fffcf6;border-bottom-left-radius:3px}.olivia-message.user{align-self:flex-end;background:#e5dac8;border-bottom-right-radius:3px}
+.olivia-prompts{display:flex;flex-direction:column;gap:7px;padding:0 24px 18px}.olivia-prompts button{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:10px 13px;border:1px solid #d4c6b0;border-radius:8px;background:transparent;color:#514233;font-size:12px}.olivia-prompts button:hover{background:#ece3d5;border-color:#b08d5f}.olivia-prompts svg{width:16px;height:16px;color:#947249}
+.olivia-feedback{flex-shrink:0;padding:0 24px 12px;color:#71685d;font-size:12px}.olivia-feedback[data-state=thinking]::before{content:'✦';display:inline-block;margin-right:8px;color:#947249;animation:olivia-pulse 1.2s ease-in-out infinite}.olivia-feedback button{border:0;background:transparent;text-decoration:underline;color:#6d4c29;padding:5px 7px;font-size:12px}
+.olivia-form{display:flex;flex-shrink:0;gap:8px;padding:6px;margin:0 18px;border:1px solid #cdbda4;border-radius:12px;background:#fffcf6}.olivia-form:focus-within{border-color:#947249}.olivia-form input{flex:1;min-width:0;width:0;background:transparent;border:0;padding:9px 10px;color:#29231c;outline:none;font-size:16px}.olivia-form input::placeholder{color:#847969;font-size:13px}.olivia-form button{display:grid;place-items:center;flex-shrink:0;width:42px;height:42px;border:0;border-radius:8px;background:#29231c;color:#fff7e9}.olivia-form button:disabled{opacity:.45;cursor:wait}
+.olivia-privacy{flex-shrink:0;padding:10px 24px 13px;margin:0;font-size:9px;line-height:1.7;color:#71685d}.olivia-privacy a{text-decoration:underline;color:#514233}.olivia-contact{display:flex;flex-shrink:0;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 24px;border:0;border-top:1px solid #d4c6b0;background:#ece3d5;color:#514233;font-size:12px!important}.olivia-contact:hover{background:#e5dac8}.olivia-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+body.dialog-open .olivia,body.menu-open .olivia{visibility:hidden;pointer-events:none}
+@keyframes olivia-enter{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes olivia-pulse{50%{opacity:.4}}
+@media(max-width:700px){.olivia{right:16px;bottom:max(14px,env(safe-area-inset-bottom))}.olivia-panel{bottom:72px;height:min(640px,calc(100dvh - 108px))}.olivia-header{padding:17px 20px}.olivia-messages{padding:20px}.olivia-intro h3{font-size:30px}.olivia-toggle{font-size:12px!important}.olivia-prompts{padding:0 20px 14px}.olivia-prompts button{padding:8px 12px}.olivia-privacy{padding:8px 20px}.olivia-contact{padding:12px 20px}}
+@media(max-height:540px){.olivia-panel{bottom:0;height:calc(100dvh - 28px)}.olivia:has(.olivia-panel:not([hidden])) .olivia-toggle{visibility:hidden}.olivia-intro h3{font-size:25px}.olivia-header{padding:12px 18px}.olivia-prompts{flex-direction:row;flex-wrap:wrap}.olivia-prompts button{font-size:10px}.olivia-prompts svg{display:none}}
+/* Shared Suites Mine Olivia design: floating cream panel, gold detail and round launcher. */
+.olivia-panel{width:min(430px,calc(100vw - 32px));border-radius:28px;border-color:#ffffff66;background:#fffdf8f2;backdrop-filter:blur(20px);box-shadow:0 46px 78px -28px #14100ac7,0 22px 38px -26px #14100aa3,0 8px 18px -14px #c8aa706b,inset 0 1px 0 #ffffffcc;animation:olivia-enter .25s ease-out,olivia-float 5.5s ease-in-out .25s infinite}
+.olivia-header{background:#2b2b2b;padding:18px 20px;border-color:#c8aa70;align-items:flex-start}
+.olivia-header .olivia-monogram{width:40px;height:40px;background:#ffffff1a;border:1px solid #ffffff26;color:#f4d99a;font-family:serif;font-size:24px}
+.olivia-header h2{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:500;letter-spacing:-.03em;line-height:1.3}
+.olivia-header .olivia-status{display:inline-flex;align-items:center;gap:8px;margin:6px 0 0;padding:4px 9px;border:1px solid #ffffff1a;background:#ffffff1a;border-radius:999px;color:#ffffffcc;font-size:10px;letter-spacing:0}
+.olivia-status i{width:8px;height:8px;flex-shrink:0;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px #34d39924,0 0 12px #34d39980}
+.olivia[data-connection=error] .olivia-status i{background:#fbbf24;box-shadow:0 0 0 3px #fbbf2424}
+.olivia-close{background:#ffffff1a;border:0;width:32px;height:32px}.olivia-close svg{width:16px;height:16px}
+.olivia-toggle{margin-left:auto;width:64px;height:64px;justify-content:center;padding:0;background:linear-gradient(135deg,#3d3932,#171512);border:1px solid #c8aa7073;box-shadow:0 24px 60px -20px #000000c7,inset 0 1px 0 #ffffff2e}
+.olivia-toggle>svg{width:24px;height:24px;margin:0;color:white}
+.olivia-messages{background:#f7f2e9}
+@keyframes olivia-float{0%,100%{transform:perspective(1200px) translateY(-6px) rotateX(.5deg) rotateY(-.6deg)}50%{transform:perspective(1200px) translateY(-12px) rotateX(.7deg) rotateY(-.4deg)}}
+.olivia-panel:focus-within{animation-play-state:running,paused}
+.olivia-form input:focus-visible{outline:none}
+@media(hover:hover){.olivia-panel:hover{animation-play-state:running,paused}}
+@media(max-height:540px){.olivia-panel{animation:olivia-enter .25s ease-out}}
+@media(prefers-reduced-motion:reduce){.olivia-panel,.olivia-feedback::before{animation:none!important}.olivia-toggle{transition:none}}
+</style>

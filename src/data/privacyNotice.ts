@@ -20,11 +20,11 @@ interface PrivacyCopy {
 }
 
 export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = {
-  updated: '2026-10-06',
+  updated: '2026-10-11',
   en: {
     title: 'Privacy notice', titleLead: 'Privacy', titleEm: 'notice.',
     description: 'How Artimex Bakery handles website and inquiry information, your California and U.S. privacy rights, and how to contact us.',
-    eyebrow: 'Artimex Bakery · Website information', updated: 'Effective & last updated: October 6, 2026',
+    eyebrow: 'Artimex Bakery · Website information', updated: 'Effective & last updated: October 11, 2026',
     intro: 'Understand what information is involved when you visit Artimex, contact our team or explore a bakery program — and how to ask about your privacy.',
     home: 'Return home', contents: 'In this notice', contact: 'Privacy contact', department: 'Artimex Bakery Sales Department',
     phone: 'Phone', request: 'Make a privacy request', requestSubject: 'Artimex privacy request',
@@ -54,6 +54,7 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
         id: 'information', title: 'Information involved in using the website',
         paragraphs: [
           'We receive the information you choose to send to Artimex. Visiting the website or choosing a product does not itself send a sales inquiry. Email links open your email application; Artimex receives the message only when you send it.',
+          'If you choose to use Olivia AI, your messages are sent through a secure website gateway to the Olivia V3.5 service operated by O7 Digital Group on its VPS. OpenAI processes the conversation to generate responses. Messages are stored in a dedicated Artimex conversation space on the server; chat state in your browser lasts only for the current page. Do not include sensitive personal information. The assistant provides guidance; a sales inquiry is sent separately through the contact form.',
           'Product selections are held temporarily in the open page and are not saved in a customer account or persistent browser storage. Reloading the page clears the selection. The website does not currently collect payment-card information or complete online payments.',
           'The website does not ask for government identification numbers, financial credentials, precise device location, biometric identifiers or health information. Please provide only the details needed for your inquiry. Message contents or a résumé may include additional personal information that you choose to disclose.',
         ],
@@ -161,7 +162,7 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
   es: {
     title: 'Aviso de privacidad', titleLead: 'Aviso de', titleEm: 'privacidad.',
     description: 'Cómo Artimex Bakery trata la información del sitio y las consultas, tus derechos en California y Estados Unidos y cómo contactarnos.',
-    eyebrow: 'Artimex Bakery · Información del sitio', updated: 'Vigencia y última actualización: 6 de octubre de 2026',
+    eyebrow: 'Artimex Bakery · Información del sitio', updated: 'Vigencia y última actualización: 11 de octubre de 2026',
     intro: 'Conoce qué información interviene cuando visitas Artimex, contactas a nuestro equipo o exploras un programa de panadería, y cómo consultar sobre tu privacidad.',
     home: 'Volver al inicio', contents: 'En este aviso', contact: 'Contacto de privacidad', department: 'Departamento de Ventas de Artimex Bakery',
     phone: 'Teléfono', request: 'Enviar una solicitud de privacidad', requestSubject: 'Solicitud de privacidad Artimex',
@@ -190,6 +191,7 @@ export const privacyNotice: { updated: string } & Record<Locale, PrivacyCopy> = 
       {
         id: 'information', title: 'Información relacionada con el uso del sitio',
         paragraphs: [
+          'Si decides usar Olivia IA, tus mensajes se envían mediante una pasarela segura del sitio al servicio Olivia V3.5 de O7 Digital Group en su VPS. OpenAI procesa la conversación para generar respuestas. Los mensajes se almacenan en un espacio de conversaciones exclusivo de Artimex en el servidor; el estado del chat en tu navegador dura solo mientras la página está abierta. No incluyas datos personales sensibles. La asistente ofrece orientación; las consultas comerciales se envían por separado mediante el formulario de contacto.',
           'Recibimos la información que decides enviar a Artimex. Visitar el sitio o elegir un producto no envía por sí solo una consulta de ventas. Los enlaces de correo abren tu aplicación de correo; Artimex recibe el mensaje únicamente cuando lo envías.',
           'La selección de productos permanece temporalmente en la página abierta y no se guarda en una cuenta de cliente ni en almacenamiento persistente del navegador. Al recargar la página, la selección se borra. El sitio no recopila actualmente datos de tarjetas ni completa pagos en línea.',
           'El sitio no solicita números de identificación oficial, credenciales financieras, ubicación precisa del dispositivo, identificadores biométricos ni datos de salud. Proporciona únicamente lo necesario para tu consulta. El contenido de un mensaje o currículum puede incluir información personal adicional que decides comunicar.',
