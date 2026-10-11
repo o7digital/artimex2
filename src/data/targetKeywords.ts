@@ -60,3 +60,8 @@ export const targetKeywords = {
 } as const;
 
 export const activeKeywords = (locale: Locale) => targetKeywords[locale].slice(0, 13);
+
+// Prioritize the local market and low/medium-difficulty business searches.
+// Exclude broad high-difficulty targets and unconfirmed manufacturer roles.
+const footerTargetIndexes = [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21] as const;
+export const footerKeywords = (locale: Locale) => footerTargetIndexes.map(index => targetKeywords[locale][index]);

@@ -1,6 +1,7 @@
 ---
 import { brand, copy, type Locale } from '../data/content';
 import { privacyNotice, privacyPaths } from '../data/privacyNotice';
+import { footerKeywords } from '../data/targetKeywords';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 interface Props { locale: Locale; page?: 'home' | 'privacy'; }
@@ -48,7 +49,22 @@ const links = [
     <a class="footer-credit" href={`https://www.o7digital.com/${locale}/`}>{es ? 'Hecho por O7 Digital' : 'Made by O7 Digital'}</a>
     <div class="footer-languages"><a href={languages.es} lang="es" hreflang="es" data-language-link aria-current={locale === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href={languages.en} lang="en" hreflang="en" data-language-link aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
   </div>
+  <div class="footer-keywords" aria-label={es ? 'Pan mexicano para tu negocio' : 'Mexican bread for your business'}>
+    <ul role="list">
+      {footerKeywords(locale).map(keyword => <li>{keyword}</li>)}
+    </ul>
+    <p>{es ? 'Consulta con nuestro equipo las opciones de productos y entrega para tu ubicación.' : 'Ask our team about product and delivery options for your location.'}</p>
+  </div>
 </footer>
 <script>
   import '../scripts/language-navigation';
 </script>
+
+<style>
+  .footer-keywords{margin-top:24px;padding-top:20px;border-top:1px solid rgba(235,219,194,.2);color:#d0c4b5;font-size:12px;line-height:1.9;text-align:center;}
+  .footer-keywords ul{list-style:none;margin:0;padding:0;}
+  .footer-keywords li{display:inline;overflow-wrap:anywhere;}
+  .footer-keywords li:not(:last-child)::after{content:' · ';white-space:pre;}
+  .footer-keywords p{margin-top:12px;font-size:12px;}
+  @media(max-width:700px){.footer-keywords{font-size:11px;line-height:2;}}
+</style>

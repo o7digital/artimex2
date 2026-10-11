@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { targetKeywords } from '../src/data/targetKeywords';
+import { targetKeywords, footerKeywords } from '../src/data/targetKeywords';
 
 const site = process.env.PUBLIC_SITE_URL || 'https://www.artimexbakery.com';
 const indexingEnabled = process.env.VERCEL_ENV !== 'preview' && process.env.SEO_NOINDEX !== 'true';
@@ -80,8 +80,22 @@ for (const locale of ['en', 'es']) {
     const keywords = html.match(/<meta name="keywords" content="([^"]+)"/);
     expect(keywords).toBeTruthy();
     expect(keywords[1].split(', ')).toEqual(targetKeywords[locale].slice(0, 13));
-    for (const pending of targetKeywords[locale].slice(13)) {
+    for (const pending of targetKeywords[locale].filter(keyword => !targetKeywords[locale].slice(0, 13).includes(keyword) && !footerKeywords(locale).includes(keyword))) {
       expect(html).not.toContain(pending);
     }
+  });
+}
+
+for (const locale of ['en', 'es']) {
+  test(`Twenty visible footer keywords in ${locale}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/${locale}/`);
+    const keywords = page.locator('.footer-keywords li');
+    await expect(keywords).toHaveCount(20);
+    expect(await keywords.allTextContents()).toEqual(footerKeywords(locale));
+    await page.locator('.footer-keywords').scrollIntoViewIfNeeded();
+    await expect(keywords.first()).toBeVisible();
+    await expect(keywords.last()).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
