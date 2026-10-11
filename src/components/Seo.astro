@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import { brand, type Locale } from '../data/content';
 import { indexingEnabled } from '../data/seo';
+import { activeKeywords } from '../data/targetKeywords';
 import logo from '../assets/artimex-logo.png';
 interface Props { title: string; description: string; locale: Locale; paths: { es: string; en: string }; business?: boolean; }
 const { title, description, locale, paths, business = false } = Astro.props;
@@ -26,6 +27,7 @@ const schema = {
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
+{business && <meta name="keywords" content={activeKeywords(locale).join(', ')} />}
 <meta name="robots" content={indexingEnabled ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
 <link rel="canonical" href={canonical} />
 <link rel="alternate" hreflang="es" href={absolute(paths.es)} />

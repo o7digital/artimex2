@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { targetKeywords } from '../src/data/targetKeywords';
 
 const site = process.env.PUBLIC_SITE_URL || 'https://www.artimexbakery.com';
 const indexingEnabled = process.env.VERCEL_ENV !== 'preview' && process.env.SEO_NOINDEX !== 'true';
@@ -70,3 +71,17 @@ test('Bread images are responsive WebP with bounded payloads', async ({ request 
     expect((await response.body()).length).toBeLessThan(150_000);
   }
 });
+
+for (const locale of ['en', 'es']) {
+  test(`Approved keyword targets and coverage gating: ${locale}`, async ({ request }) => {
+    expect(targetKeywords[locale]).toHaveLength(25);
+    const response = await request.get(`/${locale}/`);
+    const html = await response.text();
+    const keywords = html.match(/<meta name="keywords" content="([^"]+)"/);
+    expect(keywords).toBeTruthy();
+    expect(keywords[1].split(', ')).toEqual(targetKeywords[locale].slice(0, 13));
+    for (const pending of targetKeywords[locale].slice(13)) {
+      expect(html).not.toContain(pending);
+    }
+  });
+}
