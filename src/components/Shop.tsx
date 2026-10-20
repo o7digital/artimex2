@@ -71,8 +71,8 @@ export default function Shop({ locale }: { locale: Locale }) {
     </section>
     <div className="shop-layout">
       <section className="shop-catalog" aria-labelledby="shop-catalog-title">
-        <div className="shop-catalog-heading"><h2 id="shop-catalog-title">{t.catalog}</h2><label className="shop-search"><span className="sr-only">{t.search}</span><input type="search" value={search} placeholder={t.search} onChange={event => setSearch(event.target.value)} /></label></div>
-        <div className="shop-filters" role="group" aria-label={t.catalog}>{[['all', t.all], ['conchas', t.conchas], ['pastries', t.pastries]].map(([value, label]) => <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
+        <div className="shop-catalog-heading"><h2 id="shop-catalog-title">{t.catalog}</h2><label className="shop-search"><span className="sr-only">{t.search}</span><input type="search" disabled={!ready} value={search} placeholder={t.search} onChange={event => setSearch(event.target.value)} /></label></div>
+        <div className="shop-filters" role="group" aria-label={t.catalog}>{[['all', t.all], ['conchas', t.conchas], ['pastries', t.pastries]].map(([value, label]) => <button key={value} type="button" disabled={!ready} aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
         <div className="shop-products">{visibleProducts.map(product => <article className="shop-product" key={product.id}>
           <div className="shop-product-photo"><img src={product.image} srcSet={`${product.thumbnail} 375w, ${product.image} 750w`} sizes="(max-width:700px) 43vw, (max-width:1100px) 42vw, 27vw" alt={product.name} width="750" height="450" loading="lazy" /><span className="eyebrow">{business ? '12 / ' + (locale === 'es' ? 'CARTÓN' : 'CASE') : 'PAN DULCE'}</span></div>
           <div className="shop-product-copy"><h3>{product.name}</h3><p className="shop-product-description">{product.description}</p><div className="shop-product-price"><strong>{business ? t.accountPrice : money(product.demoPriceCents)}</strong><span>{business ? t.case : t.piece}</span></div>
