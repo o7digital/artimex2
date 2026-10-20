@@ -1,6 +1,9 @@
 ---
-import { brand, type Locale } from '../data/content';
+import { type Locale } from '../data/content';
 import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
+import { vendorFormCopy } from '../data/vendorForm';
+import { privacyPaths } from '../data/privacyNotice';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = locale === 'es' ? {
@@ -14,7 +17,6 @@ const t = locale === 'es' ? {
   ],
   invitation: '¿Qué podemos crear juntos?', detail: 'Preséntanos tu empresa, lo que ofreces y tu zona de servicio. Incluye un catálogo o enlace a tus productos, si lo tienes.',
   cta: 'Presenta tu propuesta', subject: 'Propuesta de proveedor para Artimex',
-  email: 'Hola, equipo Artimex:\n\nEmpresa:\nNombre y contacto:\nProductos o servicios:\nZona de servicio:\nCatálogo o sitio web:\n\nNos gustaría colaborar con ustedes porque…',
 } : {
   eyebrow: 'VENDORS · GROW WITH US', first: 'Great bread begins', second: 'before the oven.',
   body: 'Behind every bake are thoughtfully chosen ingredients, tools that deliver and people who follow through. If your business shares that care for the details, we would love to meet you.',
@@ -26,9 +28,7 @@ const t = locale === 'es' ? {
   ],
   invitation: 'What could we create together?', detail: 'Introduce your company, what you offer and where you operate. Include a catalog or a link to your products, if you have one.',
   cta: 'Introduce your business', subject: 'Vendor proposal for Artimex',
-  email: 'Hello, Artimex team:\n\nCompany:\nName and contact:\nProducts or services:\nService area:\nCatalog or website:\n\nWe would love to work with you because…',
 };
-const href = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.email)}`;
 ---
 <section class="vendors-section section-wrap" id="vendors" aria-labelledby="vendors-title">
   <div class="vendors-heading reveal">
@@ -42,7 +42,12 @@ const href = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}&bod
   </div>
   <div class="vendors-invitation reveal">
     <div><h3>{t.invitation}</h3><p>{t.detail}</p></div>
-    <a class="button button-dark" href={href}>{t.cta}<Icon /></a>
+    <a class="button button-dark" href="#vendors-form">{t.cta}<Icon /></a>
+  </div>
+  <div class="vendors-form-wrap reveal" aria-labelledby="vendors-form-title">
+    <h3 id="vendors-form-title">{vendorFormCopy[locale].title}</h3>
+    <ContactForm locale={locale} id="vendors-form" vendors />
+    <a class="vendors-privacy" href={privacyPaths[locale]}>{vendorFormCopy[locale].privacy}</a>
   </div>
 </section>
 <style>
@@ -61,5 +66,12 @@ const href = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}&bod
   .vendors-invitation{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:32px;padding-top:32px;border-top:1px solid var(--line);}
   .vendors-invitation h3{font-family:var(--serif);font-size:32px;line-height:1.15;}
   .vendors-invitation .button{flex-shrink:0;gap:24px;}
+  .vendors-form-wrap{grid-column:1/-1;border-top:1px solid var(--line);padding-top:36px;max-width:850px;width:100%;justify-self:center;}
+  .vendors-form-wrap h3{font-size:38px;line-height:1.1;margin-bottom:30px;}
+  .vendors-form-wrap :global(form){scroll-margin-top:140px;}
+  .vendors-form-wrap :global(.contact-form > label + .form-row),.vendors-form-wrap :global(.form-row + .form-row){margin-top:20px;}
+  .vendors-form-wrap :global(select){width:100%;min-height:44px;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink);font:inherit;}
+  .vendors-form-wrap :global(select:focus-visible){outline:2px solid var(--gold);outline-offset:6px;}
+  .vendors-privacy{display:inline-block;min-height:44px;padding:14px 0;font-size:11px;text-decoration:underline;text-underline-offset:4px;}
   @media(max-width:700px){.vendors-section{grid-template-columns:1fr;gap:36px;padding-top:70px;padding-bottom:60px;}h2{font-size:clamp(42px,10vw,60px);}.vendors-invitation{flex-direction:column;align-items:flex-start;gap:24px;}article h3{font-size:28px;}.vendors-invitation .button{white-space:normal;}}
 </style>

@@ -1,18 +1,25 @@
 ---
 import { copy, type Locale } from '../data/content';
 import Icon from './Icon.astro';
-interface Props { locale: Locale; id: string; careers?: boolean; }
-const { locale, id, careers = false } = Astro.props;
+import { vendorFormCopy } from '../data/vendorForm';
+interface Props { locale: Locale; id: string; careers?: boolean; vendors?: boolean; }
+const { locale, id, careers = false, vendors = false } = Astro.props;
 const t = copy[locale].contact;
 const c = copy[locale].careers;
+const v = vendorFormCopy[locale];
 ---
-<form id={id} class="contact-form" action="https://formspree.io/f/meaeqdaj" method="POST" data-sending={t.sending} data-success={careers ? c.success : t.success} data-error={t.error}>
-  <input type="hidden" name="_subject" value={careers ? c.subject : t.subject} />
+<form id={id} class="contact-form" action="https://formspree.io/f/meaeqdaj" method="POST" data-sending={t.sending} data-success={vendors ? v.success : careers ? c.success : t.success} data-error={t.error}>
+  <input type="hidden" name="_subject" value={vendors ? v.subject : careers ? c.subject : t.subject} />
+  {vendors && <input type="hidden" name="inquiry_type" value="vendor" />}
   <input type="hidden" name="language" value={locale} />
   <div class="form-row"><label>{t.name}<span aria-hidden="true"> *</span><input name="name" type="text" autocomplete="name" required maxlength="120" /></label><label>{t.email}<span aria-hidden="true"> *</span><input name="email" type="email" autocomplete="email" required maxlength="254" /></label></div>
-  {careers ? <label>{c.cv}<input name="resume_url" type="url" placeholder="https://" maxlength="2000" /></label> : <label>{t.company}<input name="company" type="text" autocomplete="organization" maxlength="180" /></label>}
-  <label>{careers ? c.message : t.message}<span aria-hidden="true"> *</span><textarea name="message" required rows="4" placeholder={careers ? c.placeholder : t.placeholder} maxlength="4000" /></label>
-  <button class="button button-dark" type="submit"><span data-submit-label>{careers ? c.button : t.button}</span><Icon /></button>
+  {careers ? <label>{c.cv}<input name="resume_url" type="url" placeholder="https://" maxlength="2000" /></label> : <label>{t.company}{vendors && <span aria-hidden="true"> *</span>}<input name="company" type="text" autocomplete="organization" required={vendors} maxlength="180" /></label>}
+  {vendors && <>
+    <div class="form-row"><label>{v.category}<span aria-hidden="true"> *</span><select name="vendor_category" required><option value="">{v.choose}</option>{v.categories.map((category, i) => <option value={['ingredients', 'packaging', 'services', 'other'][i]}>{category}</option>)}</select></label><label>{v.area}<span aria-hidden="true"> *</span><input name="service_area" type="text" required maxlength="240" /></label></div>
+    <div class="form-row"><label>{v.website}<input name="catalog_url" type="url" placeholder="https://" maxlength="2000" /></label><label>{v.phone}<input name="phone" type="tel" autocomplete="tel" maxlength="60" /></label></div>
+  </>}
+  <label>{vendors ? v.message : careers ? c.message : t.message}<span aria-hidden="true"> *</span><textarea name="message" required rows="4" placeholder={vendors ? v.placeholder : careers ? c.placeholder : t.placeholder} maxlength="4000" /></label>
+  <button class="button button-dark" type="submit"><span data-submit-label>{vendors ? v.button : careers ? c.button : t.button}</span><Icon /></button>
   <p class="form-notice">{t.notice}</p>
   <p class="form-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </form>
