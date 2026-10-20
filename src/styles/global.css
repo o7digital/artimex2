@@ -375,3 +375,7 @@ dialog::backdrop{background:rgba(20,16,12,.68);backdrop-filter:blur(7px);}
 .contact-decoration .dialog-logo{width:180px;height:auto;max-width:100%;}
 .privacy-page{isolation:isolate;}
 .privacy-page .site-footer{position:relative;z-index:1;}
+
+/* Keep the expanded shopping navigation on one line. */
+@media(min-width:1201px){.desktop-nav{gap:20px;margin-left:0;white-space:nowrap;}.desktop-nav a{font-size:13px;}.site-header{gap:20px;}.header-right{gap:20px;}.header-business{font-size:12px;gap:12px;}}
+@media(min-width:1201px) and (max-width:1350px){.desktop-nav{gap:15px;}.desktop-nav a{font-size:12px;}.header-right{gap:14px;}.header-business{padding-inline:12px;}}

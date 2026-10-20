@@ -1,6 +1,7 @@
 ---
 import { brand, copy, type Locale } from '../data/content';
 import { privacyNotice, privacyPaths } from '../data/privacyNotice';
+import { shopPaths } from '../data/commerce';
 import { footerKeywords } from '../data/targetKeywords';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
@@ -15,6 +16,7 @@ const links = [
   { label: es ? 'Inicio' : 'Home', href: home },
   { label: t.nav.story, href: `${home}#story` },
   { label: t.nav.collection, href: `${home}#collection` },
+  { label: t.nav.shop, href: shopPaths[locale] },
   { label: t.nav.business, href: `${home}#business` },
   { label: t.nav.careers, href: `${home}#careers` },
   { label: t.nav.vendors, href: `${home}#vendors` },

@@ -1,0 +1,22 @@
+---
+import { type Locale } from '../data/content';
+import { shopPaths } from '../data/commerce';
+import Icon from './Icon.astro';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const es = locale === 'es';
+---
+<section class="ordering-section section-wrap" id="order" aria-labelledby="ordering-title">
+  <div class="ordering-heading reveal"><p class="eyebrow">{es ? 'COMPRA EN LÍNEA · VISTA PREVIA' : 'PURCHASE ONLINE · PREVIEW'}</p><h2 id="ordering-title">{es ? 'Para tu mesa.' : 'For your table.'}<br /><em>{es ? 'Para tu negocio.' : 'For your business.'}</em></h2><p>{es ? 'El mismo oficio, dos maneras de disfrutarlo. Descubre una nueva forma de elegir tu pan Artimex.' : 'The same craft, two ways to enjoy it. Discover a new way to bring Artimex bread into your day.'}</p></div>
+  <div class="ordering-options">
+    <a class="ordering-option reveal" href={`${shopPaths[locale]}?customer=personal`}><span class="eyebrow">01 · {es ? 'PARTICULARES' : 'FOR EVERYDAY MOMENTS'}</span><h3>{es ? 'Un poco de felicidad,' : 'A little happiness,'}<br /><em>{es ? 'pan por pan.' : 'one bread at a time.'}</em></h3><p>{es ? 'Tus favoritos para el café de la mañana, una reunión o simplemente porque sí. Arma tu selección a la pieza.' : 'Your favorites for morning coffee, a gathering or just because. Build your own selection, one piece at a time.'}</p><span class="ordering-link">{es ? 'Comprar para mí' : 'Shop for myself'}<Icon /></span></a>
+    <a class="ordering-option ordering-business reveal" href={`${shopPaths[locale]}?customer=business`}><span class="eyebrow">02 · {es ? 'PROFESIONALES' : 'FOR YOUR BUSINESS'}</span><h3>{es ? 'Tu próxima hornada' : 'Your next batch'}<br /><em>{es ? 'de oportunidades.' : 'of possibilities.'}</em></h3><p>{es ? 'Para cafeterías, restaurantes y mercados. Explora pedidos por cartón y prepara una selección para tu negocio.' : 'For cafés, restaurants and markets. Explore ordering by the case and put together a selection for your business.'}</p><span class="ordering-link">{es ? 'Comprar para mi negocio' : 'Shop for my business'}<Icon /></span></a>
+  </div>
+  <p class="ordering-preview">{es ? 'Vista previa de la tienda. Precios y presentaciones de ejemplo; los pedidos aún no están habilitados.' : 'Store preview. Example prices and pack sizes; live ordering is not available yet.'}</p>
+</section>
+<style>
+.ordering-section{padding-top:90px;padding-bottom:80px;background:var(--paper);border-block:1px solid var(--line);}
+.ordering-heading{display:grid;grid-template-columns:1fr 1fr;gap:18px 8vw;align-items:end;}.ordering-heading .eyebrow{grid-column:1/-1;color:#776044;}.ordering-heading h2{font-size:clamp(48px,5vw,76px);line-height:1;letter-spacing:-.03em;}.ordering-heading em{color:#887051;}.ordering-heading>p:last-child{max-width:410px;font-size:14px;line-height:1.9;color:var(--muted);padding-bottom:6px;}
+.ordering-options{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:45px;}.ordering-option{padding:36px;background:var(--ivory);border:1px solid var(--line);display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s;}.ordering-option:hover{transform:translateY(-4px);}.ordering-option h3{font-size:clamp(32px,3vw,46px);line-height:1.1;margin-top:30px;}.ordering-option>p{font-size:13px;line-height:1.9;max-width:390px;margin:22px 0 28px;}.ordering-business{background:var(--ink);color:var(--ivory);}.ordering-business em{color:#d5b88c;}.ordering-link{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;margin-top:auto;padding-top:18px;border-top:1px solid currentColor;font-size:13px;}.ordering-preview{font-size:11px;line-height:1.8;color:var(--muted);margin-top:24px;}
+@media(max-width:700px){.ordering-section{padding-top:65px;padding-bottom:60px;}.ordering-heading,.ordering-options{grid-template-columns:1fr;}.ordering-heading{gap:22px;}.ordering-options{margin-top:30px;}.ordering-option{padding:28px;}.ordering-option h3{font-size:39px;}}
+</style>

@@ -15,6 +15,7 @@ import Story from '../components/Story.astro';
 import Footer from '../components/Footer.astro';
 import Careers from '../components/Careers.astro';
 import Vendors from '../components/Vendors.astro';
+import OnlineOrdering from '../components/OnlineOrdering.astro';
 import Wholesale from '../components/Wholesale.astro';
 import Restaurants from '../components/Restaurants.astro';
 import BreadDetails from '../components/BreadDetails.astro';
@@ -53,6 +54,7 @@ const t = copy[locale];
         <div class="section-heading reveal"><div><p class="eyebrow">{t.collection.eyebrow}</p><h2>{t.collection.first}<br /><em>{t.collection.second}</em></h2></div><p>{t.collection.body}</p></div>
         <Collection locale={locale} client:visible />
       </section>
+      <OnlineOrdering locale={locale} />
       <section class="business-section" id="business">
         <div class="business-texture" aria-hidden="true"><img src="/images/hero-bread.webp" width="1672" height="941" alt="" loading="lazy" /></div>
         <div class="business-inner section-wrap"><div class="business-title reveal"><p class="eyebrow">{t.business.eyebrow}</p><h2>{t.business.first}<br /><em>{t.business.second}</em></h2><button class="button button-ivory" data-contact>{t.business.link}<Icon /></button></div><div class="business-copy reveal"><p>{t.business.body}</p><div class="business-list">{t.business.items.map((item, i) => <div>{i === 0 ? <button type="button" data-restaurants aria-haspopup="dialog" aria-controls="restaurants-dialog"><span>0{i + 1}</span><span>{item}</span><Icon /></button> : <><span>0{i + 1}</span><span>{item}</span><Icon /></>}</div>)}</div><p class="business-note">{t.business.sub}</p></div></div>

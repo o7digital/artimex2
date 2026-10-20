@@ -1,0 +1,36 @@
+---
+import '@fontsource/cormorant-garamond/latin-400.css';
+import '@fontsource/cormorant-garamond/latin-400-italic.css';
+import '@fontsource/dm-sans/latin-400.css';
+import '@fontsource/dm-sans/latin-500.css';
+import '../styles/global.css';
+import '../styles/shop.css';
+import { brand, copy, type Locale } from '../data/content';
+import { shopPaths } from '../data/commerce';
+import { shopCopy } from '../data/shopCopy';
+import { privacyPaths } from '../data/privacyNotice';
+import Logo from '../components/Logo.astro';
+import Shop from '../components/Shop';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = shopCopy[locale];
+const other = locale === 'en' ? 'es' : 'en';
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{locale === 'es' ? 'Compra en línea' : 'Purchase online'} — Artimex Bakery · Preview</title>
+    <meta name="description" content={t.intro} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f4f0e8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang={other} href={shopPaths[other]} />
+  </head>
+  <body class="shop-page">
+    <a class="skip-link" href="#shop-main">{copy[locale].skip}</a>
+    <header class="shop-header section-wrap"><a href={`/${locale}/`} aria-label="Artimex Bakery"><Logo eager /></a><nav aria-label={locale === 'es' ? 'Navegación de la tienda' : 'Shop navigation'}><a href={`/${locale}/#order`}>← {t.home}</a><a class="shop-language" href={shopPaths[other]} hreflang={other} lang={other} data-shop-language>{other.toUpperCase()}</a></nav></header>
+    <main class="shop-main section-wrap" id="shop-main"><Shop locale={locale} client:load /><noscript><p>{locale === 'es' ? 'Activa JavaScript para explorar el carrito de demostración. No se procesan pedidos en esta vista previa.' : 'Enable JavaScript to explore the demo shopping bag. No orders are processed in this preview.'}</p></noscript></main>
+    <footer class="shop-footer section-wrap"><span>© {new Date().getFullYear()} Artimex Bakery · {t.preview}</span><nav><a href={privacyPaths[locale]}>{locale === 'es' ? 'Privacidad' : 'Privacy'}</a><a href={`mailto:${brand.email}`}>{brand.email}</a></nav></footer>
+  </body>
+</html>

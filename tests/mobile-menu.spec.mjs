@@ -19,7 +19,7 @@ for (const locale of ['en', 'es']) for (const [width, height] of [[390, 844], [3
     };
 
     // Every link must work both before and after the header turns black on scroll.
-    for (const section of ['collection', 'story', 'business', 'careers', 'vendors', 'contact']) {
+    for (const section of ['collection', 'order', 'story', 'business', 'careers', 'vendors', 'contact']) {
       await verifyOpen();
       await menu.locator(`a[href="#${section}"]`).click();
       await expect(page).toHaveURL(new RegExp(`#${section}$`));
