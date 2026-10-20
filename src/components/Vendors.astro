@@ -1,0 +1,65 @@
+---
+import { brand, type Locale } from '../data/content';
+import Icon from './Icon.astro';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = locale === 'es' ? {
+  eyebrow: 'PROVEEDORES · CREZCAMOS JUNTOS', first: 'Un gran pan empieza', second: 'antes del horno.',
+  body: 'Detrás de cada hornada hay ingredientes bien elegidos, herramientas que responden y personas que cumplen. Si tu empresa comparte ese cuidado por los detalles, queremos conocerte.',
+  note: 'Tu experiencia. Nuestro oficio. Algo bueno por hacer.',
+  categories: [
+    ['Ingredientes con carácter', 'Harinas, granos, lácteos y especialidades que aporten sabor y consistencia a cada receta.'],
+    ['Empaques que cuidan', 'Soluciones de empaque que protejan el pan y lo presenten con el cuidado que merece.'],
+    ['Ideas que nos hacen crecer', 'Equipos, logística y servicios que ayuden a que cada jornada en la panadería fluya mejor.'],
+  ],
+  invitation: '¿Qué podemos crear juntos?', detail: 'Preséntanos tu empresa, lo que ofreces y tu zona de servicio. Incluye un catálogo o enlace a tus productos, si lo tienes.',
+  cta: 'Presenta tu propuesta', subject: 'Propuesta de proveedor para Artimex',
+  email: 'Hola, equipo Artimex:\n\nEmpresa:\nNombre y contacto:\nProductos o servicios:\nZona de servicio:\nCatálogo o sitio web:\n\nNos gustaría colaborar con ustedes porque…',
+} : {
+  eyebrow: 'VENDORS · GROW WITH US', first: 'Great bread begins', second: 'before the oven.',
+  body: 'Behind every bake are thoughtfully chosen ingredients, tools that deliver and people who follow through. If your business shares that care for the details, we would love to meet you.',
+  note: 'Your expertise. Our craft. Something good in the making.',
+  categories: [
+    ['Ingredients with character', 'Flours, grains, dairy and specialty ingredients that bring flavor and consistency to every recipe.'],
+    ['Packaging with purpose', 'Packaging solutions that protect the bread and present it with the care it deserves.'],
+    ['Ideas that move us forward', 'Equipment, logistics and services that help every day at the bakery run a little better.'],
+  ],
+  invitation: 'What could we create together?', detail: 'Introduce your company, what you offer and where you operate. Include a catalog or a link to your products, if you have one.',
+  cta: 'Introduce your business', subject: 'Vendor proposal for Artimex',
+  email: 'Hello, Artimex team:\n\nCompany:\nName and contact:\nProducts or services:\nService area:\nCatalog or website:\n\nWe would love to work with you because…',
+};
+const href = `mailto:${brand.email}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.email)}`;
+---
+<section class="vendors-section section-wrap" id="vendors" aria-labelledby="vendors-title">
+  <div class="vendors-heading reveal">
+    <p class="eyebrow">{t.eyebrow}</p>
+    <h2 id="vendors-title">{t.first}<br /><em>{t.second}</em></h2>
+    <p class="vendors-body">{t.body}</p>
+    <p class="vendors-note">{t.note}</p>
+  </div>
+  <div class="vendors-categories reveal">
+    {t.categories.map(([title, body], index) => <article><span class="vendor-number">0{index + 1}</span><div><h3>{title}</h3><p>{body}</p></div></article>)}
+  </div>
+  <div class="vendors-invitation reveal">
+    <div><h3>{t.invitation}</h3><p>{t.detail}</p></div>
+    <a class="button button-dark" href={href}>{t.cta}<Icon /></a>
+  </div>
+</section>
+<style>
+  .vendors-section{display:grid;grid-template-columns:1.1fr 1fr;gap:60px 8vw;padding-top:100px;padding-bottom:80px;background:#eee6d9;border-bottom:1px solid var(--line);scroll-margin-top:100px;}
+  .eyebrow{color:#776044;}
+  h2{font-size:clamp(44px,4.3vw,70px);line-height:1.04;letter-spacing:-.028em;margin-top:24px;}
+  h2 em{color:#887051;}
+  .vendors-body{max-width:440px;font-size:14px;line-height:1.9;color:var(--muted);margin-top:26px;}
+  .vendors-note{max-width:400px;font-family:var(--serif);font-size:25px;font-style:italic;line-height:1.35;margin-top:26px;color:#776044;}
+  .vendors-categories{align-self:center;}
+  article{display:flex;gap:24px;padding:25px 0;border-top:1px solid var(--line);}
+  article:last-child{border-bottom:1px solid var(--line);}
+  .vendor-number{font-size:11px;letter-spacing:.1em;color:#776044;padding-top:7px;}
+  article h3{font-family:var(--serif);font-size:30px;line-height:1.15;}
+  article p,.vendors-invitation p{font-size:13px;line-height:1.8;color:var(--muted);margin-top:10px;max-width:440px;}
+  .vendors-invitation{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:32px;padding-top:32px;border-top:1px solid var(--line);}
+  .vendors-invitation h3{font-family:var(--serif);font-size:32px;line-height:1.15;}
+  .vendors-invitation .button{flex-shrink:0;gap:24px;}
+  @media(max-width:700px){.vendors-section{grid-template-columns:1fr;gap:36px;padding-top:70px;padding-bottom:60px;}h2{font-size:clamp(42px,10vw,60px);}.vendors-invitation{flex-direction:column;align-items:flex-start;gap:24px;}article h3{font-size:28px;}.vendors-invitation .button{white-space:normal;}}
+</style>
