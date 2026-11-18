@@ -29,6 +29,10 @@ Development and built preview: http://127.0.0.1:4174.
 
 The existing site had no backend, checkout, analytics or external service integration. Sales contact details and illustrative imagery come from the supplied ZIP. `noindex, nofollow` is retained for preview review.
 
+## Commerce backend on dev
+
+Directus, PostgreSQL and Artimex Commerce Studio are deployed to the dedicated Railway `dev` environment. The Studio manages products, customers, draft orders and reviewed GlobalBake CSV imports. Published products feed the Vercel preview catalog; checkout remains a simulation. XML import/export is prepared but awaits the client's accepted XML contract and test access. See [the backend guide](cms/README.md) and [GlobalBake integration](docs/globalbake-integration.md).
+
 ## Hosting and tests
 
 Vercel builds the static website into `dist/`. Publish preview deployments with `vercel deploy --target preview`; production is a separate action after review.

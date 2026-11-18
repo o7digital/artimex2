@@ -1,0 +1,12 @@
+{
+  "name": "artimex-commerce-studio",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test *.test.mjs",
+    "check": "node --check server.mjs && node --check commerce.mjs && node --check public/app.js"
+  },
+  "dependencies": { "csv-parse": "7.0.3", "fast-xml-parser": "5.12.1" }
+}

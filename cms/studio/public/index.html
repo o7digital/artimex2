@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#202c2b">
+  <title>Artimex · Commerce Studio</title><link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+  <div id="login-view" class="login-view">
+    <section class="login-panel">
+      <a class="brand" href="/" aria-label="Artimex Studio"><img src="/logo.png" width="150" height="95" alt="Artimex Bakery"><span>COMMERCE STUDIO</span></a>
+      <div class="login-copy"><p class="eyebrow">EL ARTE DE HACERLO CRECER</p><h1>Lo que hacemos<br>con el corazón.<br><em>En tus manos.</em></h1><p>Tu panadería, conectada. Un espacio para cuidar tus productos, tus clientes y cada nuevo pedido.</p>
+        <form id="login-form"><label>Correo electrónico<input name="email" type="email" autocomplete="username" required placeholder="tu@correo.com"></label><label>Contraseña<input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label><p id="login-error" role="alert" class="error"></p><button type="submit" class="button primary wide">Entrar al Studio</button></form>
+        <p class="private-note">Espacio privado · Entorno de desarrollo</p>
+      </div>
+      <footer>Tradición mexicana. Nuevas posibilidades.<span>O7 Digital</span></footer>
+    </section>
+    <aside class="login-photo"><img src="/bakery.webp" alt="El oficio de la panadería mexicana"><div><span>ARTIMEX BAKERY · SANTA FE SPRINGS</span><p>Cuidar lo nuestro.<br>Compartirlo mejor.</p><small>La misma esencia. Un nuevo capítulo.</small></div></aside>
+  </div>
+  <div id="studio-view" class="studio" hidden>
+    <button id="nav-backdrop" class="nav-backdrop" aria-label="Cerrar navegación" hidden></button>
+    <aside id="sidebar" class="sidebar"><a href="#overview" class="brand sidebar-brand"><img src="/logo.png" alt="Artimex Bakery"><span>COMMERCE STUDIO</span></a><p class="nav-label">TU PANADERÍA</p><nav id="navigation" aria-label="Navegación del Studio"></nav><div class="sidebar-bottom"><span class="environment">Espacio de desarrollo</span><a id="preview-link" target="_blank" rel="noopener">Ver mi tienda</a><button id="logout">Cerrar sesión</button><p>Hecho con cuidado por O7 Digital</p></div></aside>
+    <div class="workspace"><header class="topbar"><div class="breadcrumbs"><button id="menu-toggle" aria-label="Abrir navegación" aria-expanded="false">☰</button><span>Artimex <span class="separator">/</span> <strong id="breadcrumb">Resumen</strong></span></div><div class="account"><span class="avatar" aria-hidden="true">A</span><span><strong id="account-name">Mi Studio</strong><small>Commerce · Dev</small></span></div></header><main id="main" tabindex="-1"><div id="page"></div></main><footer class="workspace-footer"><span>Artimex Bakery · Commerce Studio</span><span>Hecho para lo que viene.</span></footer></div>
+  </div>
+  <dialog id="editor" aria-labelledby="editor-title"><div class="dialog-head"><div><p class="eyebrow">ARTIMEX · STUDIO</p><h2 id="editor-title">Editar</h2></div><button id="close-editor" class="icon-button" aria-label="Cerrar editor">×</button></div><div id="editor-body"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

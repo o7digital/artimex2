@@ -1,0 +1,17 @@
+{
+  "project": "artimex-commerce",
+  "projectId": "6ff86a60-1430-4cee-825b-e3238ff78075",
+  "environment": "dev",
+  "environmentId": "0d75b6e2-2ace-4ae7-a870-cc42076a5687",
+  "databaseServiceId": "bbaed334-9b3c-4d68-ad20-4fbdc97d73d3",
+  "directusServiceId": "99fd7ba6-dc71-4172-80fe-3dd76bc31033",
+  "directusImage": "directus/directus:12.6.1",
+  "directusUrl": "https://directus-dev-d1145f5f.up.railway.app",
+  "uploadsVolumeId": "2d5fefa3-e7cd-48d6-9e1d-7dfe98de1b68",
+  "uploadsMountPath": "/directus/uploads",
+  "studioServiceId": "0c5392bb-3f92-42d7-a165-cde68a944880",
+  "studioUrl": "https://studio-dev-037f6348.up.railway.app",
+  "branch": "dev",
+  "checkoutEnabled": false,
+  "xmlConnected": false
+}

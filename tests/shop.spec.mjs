@@ -104,3 +104,37 @@ test('Purchase online sits between collection and story in both navigation menus
   await expect(page).toHaveURL(/\/en\/shop\/\?customer=business$/);
   await expect(page.locator('.shop-mode-buttons button').nth(1)).toHaveAttribute('aria-pressed', 'true');
 });
+
+test('published Studio products replace the demo and keep real pack sizes across reloads', async ({ page }) => {
+  const product = { id: '00000000-0000-4000-a000-000000000001', name_es: 'Producto de prueba', name_en: 'Fixture bread', description_en: 'Catalog fixture', category: 'conchas', price_cents: 425, stock_quantity: 10, units_per_case: 24, enabled_b2c: true, enabled_b2b: true };
+  await page.route('**/api/commerce/catalog', route => route.fulfill({ json: { products: [product], checkoutEnabled: false } }));
+  await page.goto('/en/shop/');
+  await expect(page.locator('.shop-add').first()).toBeEnabled();
+  await expect(page.locator('.shop-products article')).toHaveCount(1);
+  await expect(page.locator('.shop-products h3')).toHaveText('Fixture bread');
+  await expect(page.locator('.shop-preview')).toContainText('Catalog published from Artimex Studio');
+  await page.locator('.shop-add').click();
+  await expect(page.locator('.shop-cart-summary strong')).toHaveText('$4.25');
+  await page.reload();
+  await expect(page.locator('.shop-quantity output')).toHaveText('1');
+  await page.locator('.shop-mode-buttons button').nth(1).click();
+  await expect(page.locator('.shop-product-price')).toContainText('24 pieces / case');
+  await page.locator('.shop-add').click();
+  await expect(page.locator('.shop-cart-summary')).toContainText('24 pieces in total');
+  await page.locator('[data-shop-language]').click();
+  await expect(page.locator('.shop-quantity output')).toHaveText('1');
+  await expect(page.locator('.shop-products h3')).toHaveText('Producto de prueba');
+});
+
+test('catalog products without a confirmed price or pack cannot be selected', async ({ page }) => {
+  const product = { id: '00000000-0000-4000-a000-000000000002', name_es: 'Sin precio', name_en: 'Price pending', category: 'other', price_cents: null, stock_quantity: null, units_per_case: null, enabled_b2c: true, enabled_b2b: true };
+  await page.route('**/api/commerce/catalog', route => route.fulfill({ json: { products: [product] } }));
+  await page.goto('/en/shop/');
+  await expect(page.locator('.shop-products article')).toHaveCount(1);
+  await expect(page.locator('.shop-mode-buttons button').first()).toBeEnabled();
+  await expect(page.locator('.shop-add')).toBeDisabled();
+  await expect(page.locator('.shop-product-price')).not.toContainText('$0.00');
+  await page.locator('.shop-mode-buttons button').nth(1).click();
+  await expect(page.locator('.shop-add')).toBeDisabled();
+  await expect(page.locator('.shop-product-price')).not.toContainText('12 pieces');
+});

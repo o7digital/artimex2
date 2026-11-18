@@ -9,6 +9,8 @@
     "check": "astro check",
     "preview": "astro preview --host 127.0.0.1 --port 4174",
     "test": "playwright test",
+    "cms:check": "npm run check --prefix cms/studio",
+    "cms:test": "npm test --prefix cms/studio",
     "images": "node scripts/optimize-bread-images.mjs",
     "prebuild": "npm run images",
     "predev": "npm run images"

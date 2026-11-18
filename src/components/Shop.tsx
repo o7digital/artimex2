@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { type Locale } from '../data/content';
-import { cartKey, cartLines, createPreviewDraft, sanitizeCart, shopProducts, type Cart, type CustomerType } from '../data/commerce';
+import { cartKey, cartLines, createPreviewDraft, sanitizeCart, shopProducts, catalogProducts, canSelectProduct, type ShopProduct, type Cart, type CustomerType } from '../data/commerce';
 import { shopCopy } from '../data/shopCopy';
 import '../styles/shop.css';
 
 function Arrow() { return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7" /></svg>; }
 function Bag() { return <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7ZM8 8V6a4 4 0 0 1 8 0v2" /></svg>; }
-const readCart = (type: CustomerType): Cart => { try { return sanitizeCart(JSON.parse(localStorage.getItem(cartKey(type)) || '{}')); } catch { return {}; } };
+const readCart = (type: CustomerType, catalog: ShopProduct[]): Cart => { try { return sanitizeCart(JSON.parse(localStorage.getItem(cartKey(type)) || '{}'), catalog.filter(product => canSelectProduct(product, type))); } catch { return {}; } };
 
 export default function Shop({ locale }: { locale: Locale }) {
   const t = shopCopy[locale];
   const [customerType, setCustomerType] = useState<CustomerType>('personal');
   const [cart, setCart] = useState<Cart>({});
   const [ready, setReady] = useState(false);
+  const [catalog, setCatalog] = useState<ShopProduct[]>(shopProducts(locale));
+  const [connectedCatalog, setConnectedCatalog] = useState(false);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
@@ -24,20 +26,28 @@ export default function Shop({ locale }: { locale: Locale }) {
   const business = customerType === 'business';
   const quantityLabel = (quantity: number) => business ? (quantity === 1 ? t.caseUnit : t.cases) : (quantity === 1 ? t.item : t.items);
   const money = (cents: number) => new Intl.NumberFormat(locale === 'es' ? 'es-US' : 'en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
-  const lines = cartLines(cart, customerType, locale);
+  const lines = cartLines(cart, customerType, locale, catalog);
   const count = lines.reduce((sum, line) => sum + line.quantity, 0);
   const units = lines.reduce((sum, line) => sum + line.quantity * line.unitsPerPack, 0);
   const subtotal = lines.reduce((sum, line) => sum + line.quantity * line.demoPriceCents, 0);
   const query = search.trim().toLocaleLowerCase(locale);
-  const visibleProducts = shopProducts(locale).filter(product => (filter === 'all' || (filter === 'conchas' ? product.id.startsWith('concha-') : !product.id.startsWith('concha-'))) && `${product.name} ${product.description}`.toLocaleLowerCase(locale).includes(query));
+  const visibleProducts = catalog.filter(product => (business ? product.enabledB2b !== false : product.enabledB2c !== false) && (filter === 'all' || (filter === 'conchas' ? product.category === 'conchas' || product.id.startsWith('concha-') : product.category !== 'conchas' && !product.id.startsWith('concha-'))) && `${product.name} ${product.description}`.toLocaleLowerCase(locale).includes(query));
 
   useEffect(() => {
-    const type = new URLSearchParams(location.search).get('customer') === 'business' ? 'business' : 'personal';
-    setCustomerType(type); setCart(readCart(type)); setReady(true);
-    const restore = () => { const next = new URLSearchParams(location.search).get('customer') === 'business' ? 'business' : 'personal'; setCustomerType(next); setCart(readCart(next)); };
-    window.addEventListener('popstate', restore);
-    return () => window.removeEventListener('popstate', restore);
-  }, []);
+    let cancelled = false;
+    let loadedCatalog = shopProducts(locale);
+    const restore = () => { const next = new URLSearchParams(location.search).get('customer') === 'business' ? 'business' : 'personal'; setCustomerType(next); setCart(readCart(next, loadedCatalog)); };
+    const load = async () => {
+      try {
+        const response = await fetch('/api/commerce/catalog', { signal: AbortSignal.timeout(5000) });
+        if (response.ok) { const result = await response.json(); const imported = catalogProducts(result.products, locale); if (imported.length) { loadedCatalog = imported; if (!cancelled) setConnectedCatalog(true); } }
+      } catch { /* The clearly labelled demo remains available while the catalogue is empty or unavailable. */ }
+      if (cancelled) return;
+      setCatalog(loadedCatalog); restore(); setReady(true);
+    };
+    load(); window.addEventListener('popstate', restore);
+    return () => { cancelled = true; window.removeEventListener('popstate', restore); };
+  }, [locale]);
   useEffect(() => {
     if (!ready) return;
     try { localStorage.setItem(cartKey(customerType), JSON.stringify(cart)); } catch { /* The current cart still works when storage is unavailable. */ }
@@ -47,7 +57,7 @@ export default function Shop({ locale }: { locale: Locale }) {
 
   const switchType = (type: CustomerType) => {
     if (type === customerType) return;
-    setCustomerType(type); setCart(readCart(type)); setStatus('');
+    setCustomerType(type); setCart(readCart(type, catalog)); setStatus('');
     const url = new URL(location.href); url.searchParams.set('customer', type); history.pushState(null, '', url);
   };
   const changeQuantity = (id: string, delta: number) => {
@@ -56,14 +66,14 @@ export default function Shop({ locale }: { locale: Locale }) {
   };
   const openCheckout = () => { setDraft(null); setFulfillment('pickup'); dialog.current?.showModal(); document.body.classList.add('dialog-open'); };
   const closeCheckout = () => { document.body.classList.remove('dialog-open'); checkoutTrigger.current?.focus(); };
-  const previewOrder = (event: SyntheticEvent<HTMLFormElement>) => { event.preventDefault(); setDraft(createPreviewDraft(cart, customerType, locale, fulfillment)); };
+  const previewOrder = (event: SyntheticEvent<HTMLFormElement>) => { event.preventDefault(); setDraft(createPreviewDraft(cart, customerType, locale, fulfillment, catalog)); };
 
   return <div className="shop-experience">
     <section className="shop-intro" aria-labelledby="shop-title">
       <div><p className="eyebrow">ARTIMEX · {locale === 'es' ? 'COMPRA EN LÍNEA' : 'PURCHASE ONLINE'}</p><h1 id="shop-title">{t.title}<br /><em>{t.italic}</em></h1><p className="shop-intro-copy">{t.intro}</p></div>
       <figure><img src="/images/breads/concha-chocolate-750.webp" width="750" height="450" alt={locale === 'es' ? 'Concha de chocolate Artimex' : 'Artimex chocolate concha'} fetchPriority="high" /><figcaption>{locale === 'es' ? 'Tradición mexicana. Momentos para compartir.' : 'Mexican roots. Moments worth sharing.'}</figcaption></figure>
     </section>
-    <aside className="shop-preview"><span className="preview-dot" aria-hidden="true" /><div><strong>{t.preview}</strong><p>{t.previewNote}</p></div></aside>
+    <aside className="shop-preview"><span className="preview-dot" aria-hidden="true" /><div><strong>{t.preview}</strong><p>{connectedCatalog ? locale === 'es' ? 'Catálogo publicado desde Artimex Studio. La compra sigue siendo una simulación: no se procesan pedidos ni pagos.' : 'Catalog published from Artimex Studio. Checkout remains a simulation: no orders or payments are processed.' : t.previewNote}</p></div></aside>
     <section className="shop-mode" aria-label={t.modeLabel}>
       <div className="shop-mode-buttons" role="group" aria-label={t.modeLabel}>{(['personal', 'business'] as const).map(type => <button key={type} type="button" disabled={!ready} aria-pressed={customerType === type} onClick={() => switchType(type)}>{type === 'personal' ? t.personal : t.business}<Arrow /></button>)}</div>
       <p>{business ? t.businessNote : t.personalNote}</p>
@@ -74,9 +84,9 @@ export default function Shop({ locale }: { locale: Locale }) {
         <div className="shop-catalog-heading"><h2 id="shop-catalog-title">{t.catalog}</h2><label className="shop-search"><span className="sr-only">{t.search}</span><input type="search" disabled={!ready} value={search} placeholder={t.search} onChange={event => setSearch(event.target.value)} /></label></div>
         <div className="shop-filters" role="group" aria-label={t.catalog}>{[['all', t.all], ['conchas', t.conchas], ['pastries', t.pastries]].map(([value, label]) => <button key={value} type="button" disabled={!ready} aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
         <div className="shop-products">{visibleProducts.map(product => <article className="shop-product" key={product.id}>
-          <div className="shop-product-photo"><img src={product.image} srcSet={`${product.thumbnail} 375w, ${product.image} 750w`} sizes="(max-width:700px) 43vw, (max-width:1100px) 42vw, 27vw" alt={product.name} width="750" height="450" loading="lazy" /><span className="eyebrow">{business ? '12 / ' + (locale === 'es' ? 'CARTÓN' : 'CASE') : 'PAN DULCE'}</span></div>
-          <div className="shop-product-copy"><h3>{product.name}</h3><p className="shop-product-description">{product.description}</p><div className="shop-product-price"><strong>{business ? t.accountPrice : money(product.demoPriceCents)}</strong><span>{business ? t.case : t.piece}</span></div>
-          <button className="shop-add" type="button" disabled={!ready || (cart[product.id] || 0) >= 99} onClick={() => { changeQuantity(product.id, 1); setStatus(`${product.name}: ${t.added}`); }} aria-label={`${business ? t.addCase : t.add}: ${product.name}`}>{business ? t.addCase : t.add}<span aria-hidden="true">+</span></button></div>
+          <div className="shop-product-photo"><img src={product.image} srcSet={`${product.thumbnail} 375w, ${product.image} 750w`} sizes="(max-width:700px) 43vw, (max-width:1100px) 42vw, 27vw" alt={product.name} width="750" height="450" loading="lazy" /><span className="eyebrow">{business ? (product.unitsPerCase ?? (connectedCatalog ? '—' : 12)) + ' / ' + (locale === 'es' ? 'CARTÓN' : 'CASE') : product.kind}</span></div>
+          <div className="shop-product-copy"><h3>{product.name}</h3><p className="shop-product-description">{product.description}</p><div className="shop-product-price"><strong>{business || product.priceAvailable === false ? t.accountPrice : money(product.demoPriceCents)}</strong><span>{business ? connectedCatalog ? `${product.unitsPerCase ?? '—'} ${locale === 'es' ? 'piezas / cartón' : 'pieces / case'}` : t.case : connectedCatalog ? locale === 'es' ? 'por pieza · USD' : 'per piece · USD' : t.piece}</span></div>
+          <button className="shop-add" type="button" disabled={!ready || !canSelectProduct(product, customerType) || connectedCatalog && business && !product.unitsPerCase || (cart[product.id] || 0) >= 99} onClick={() => { changeQuantity(product.id, 1); setStatus(`${product.name}: ${t.added}`); }} aria-label={`${business ? t.addCase : t.add}: ${product.name}`}>{business ? t.addCase : t.add}<span aria-hidden="true">+</span></button></div>
         </article>)}</div>
         {!visibleProducts.length && <div className="shop-no-results"><p>{t.noResults}</p><button className="text-link" onClick={() => { setSearch(''); setFilter('all'); }}>{t.reset}</button></div>}
         <p className="sr-only" role="status">{status}</p>
