@@ -11,8 +11,9 @@ for (const [locale, path] of [['en', '/en/'], ['es', '/es/']]) {
     const response = await request.get(path); const html = await response.text();
     const example = data.products.find(product => !/[&<>"']/.test(product[`name_${locale}`]));
     expect(html).toContain(example[`name_${locale}`]);
-    await page.goto(path + '#collection');
+    await page.goto(path + '#collection', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.collection-search')).toBeVisible();
+    await expect(page.locator('astro-island').filter({ has: page.locator('.collection-search') })).not.toHaveAttribute('ssr', '');
     await expect(page.locator('.product-card')).toHaveCount(data.products.length);
     await expect(page.locator('.collection-search small')).toContainText(String(data.products.length));
     const search = page.locator('.collection-search input'); await search.fill(example[`name_${locale}`]);
@@ -29,7 +30,8 @@ for (const [locale, path] of [['en', '/en/'], ['es', '/es/']]) {
 }
 test('connected shop lists the source variants without invented prices or live ordering', async ({ page, request }) => {
   const data = await (await request.get('/api/commerce/catalog')).json();
-  await page.goto('/en/shop/');
+  await page.goto('/en/shop/', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('astro-island').filter({ has: page.locator('.shop-products') })).not.toHaveAttribute('ssr', '');
   await expect(page.locator('.shop-products article')).toHaveCount(data.products.filter(product => product.enabled_b2c).length);
   await expect(page.locator('.shop-products')).not.toContainText('$0.00');
   const missingPrice = data.products.find(product => product.enabled_b2c && product.price_cents === null);
