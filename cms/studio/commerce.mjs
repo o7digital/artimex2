@@ -5,7 +5,7 @@ import { XMLParser, XMLValidator } from 'fast-xml-parser';
 export class InputError extends Error {
   constructor(message, status = 400) { super(message); this.status = status; }
 }
-export const productFields = ['globalbake_sku', 'name_es', 'name_en', 'description_es', 'description_en', 'category', 'status', 'price_cents', 'stock_quantity', 'units_per_case', 'enabled_b2c', 'enabled_b2b', 'image_url'];
+export const productFields = ['globalbake_sku', 'name_es', 'name_en', 'description_es', 'description_en', 'category', 'status', 'price_cents', 'stock_quantity', 'units_per_case', 'enabled_b2c', 'enabled_b2b', 'image_url', 'image_illustrative'];
 const text = (value, max = 2000) => {
   if (typeof value !== 'string' || value.length > max || /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value)) throw new InputError('Revisa los textos y su longitud.');
   return value.trim();
@@ -22,7 +22,7 @@ export function validateProduct(input, creating = false) {
     if (['price_cents', 'stock_quantity', 'units_per_case'].includes(key)) {
       if (value !== null && (!Number.isSafeInteger(value) || value < (key === 'units_per_case' ? 1 : 0) || value > 100000000)) throw new InputError(`Valor inválido: ${key}.`);
       row[key] = value;
-    } else if (key.startsWith('enabled_')) {
+    } else if (key.startsWith('enabled_') || key === 'image_illustrative') {
       if (typeof value !== 'boolean') throw new InputError('Selecciona los canales de venta.');
       row[key] = value;
     } else row[key] = text(value ?? '', key.startsWith('description_') ? 8000 : 2000);

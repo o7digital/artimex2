@@ -23,9 +23,11 @@ import Seo from '../components/Seo.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import ContactForm from '../components/ContactForm.astro';
 import OliviaChat from '../components/OliviaChat.astro';
+import { loadPublicCatalog } from '../data/publicCatalog';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = copy[locale];
+const catalog = await loadPublicCatalog(locale);
 ---
 <!doctype html>
 <html lang={locale}>
@@ -52,7 +54,7 @@ const t = copy[locale];
       <Story locale={locale} />
       <section class="collection-section section-wrap" id="collection">
         <div class="section-heading reveal"><div><p class="eyebrow">{t.collection.eyebrow}</p><h2>{t.collection.first}<br /><em>{t.collection.second}</em></h2></div><p>{t.collection.body}</p></div>
-        <Collection locale={locale} client:visible />
+        <Collection locale={locale} initialProducts={catalog} client:visible />
       </section>
       <OnlineOrdering locale={locale} />
       <section class="business-section" id="business">

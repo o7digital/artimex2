@@ -11,12 +11,8 @@ import Logo from './Logo.astro';
     {breadDetails.map((bread, i) => <article data-bread-panel={bread.name} hidden={i !== 0}>
       <h2 id={i === 0 ? 'bread-details-title' : undefined}>{bread.name}</h2>
       <p class="bread-description">{bread.description}</p>
-      <h3 class="eyebrow">¿DE QUÉ ESTÁ HECHO?</h3>
-      <p class="bread-recipe-label">Ingredientes habituales de la receta tradicional</p>
-      <ul class="bread-ingredients">{bread.ingredients.map(ingredient => <li>{ingredient}</li>)}</ul>
       <div class="bread-notes"><div><h3 class="eyebrow">SU TEXTURA</h3><p>{bread.texture}</p></div><div><h3 class="eyebrow">EL MOMENTO PERFECTO</h3><p>{bread.pairing}</p></div></div>
     </article>)}
-    <p class="bread-recipe-note">Descripción de la preparación tradicional. Los ingredientes de Artimex pueden variar según la presentación.</p>
     <button class="button button-dark" data-bread-close>Volver a la colección<Icon /></button>
   </div>
 </dialog>

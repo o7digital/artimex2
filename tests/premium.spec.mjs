@@ -89,7 +89,7 @@ for (const width of [1440, 768, 390, 320]) {
       const details = page.locator('#bread-details-dialog');
       await expect(details).toBeVisible();
       await expect(details.locator('article:visible h2')).toHaveText(name);
-      await expect(details.locator('article:visible .bread-ingredients li').first()).toBeVisible();
+      await expect(details.locator('.bread-ingredients')).toHaveCount(0);
       await expect(details.locator('form')).toHaveCount(0);
       await expect(page.locator('#contact-dialog')).toBeHidden();
       await page.getByRole('button', { name: 'Volver a la colección', exact: true }).click();

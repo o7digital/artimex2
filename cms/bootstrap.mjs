@@ -27,7 +27,7 @@ const definitions = {
     choices('status', ['draft', 'published', 'archived'], 'draft'), choices('category', ['conchas', 'pastries', 'savory', 'other'], 'other'),
     count('price_cents'), count('stock_quantity'), count('units_per_case'),
     field('enabled_b2c', 'boolean', { schema: { default_value: false } }), field('enabled_b2b', 'boolean', { schema: { default_value: false } }),
-    field('image_url'), choices('source', ['manual', 'globalbake'], 'manual'), field('erp_synced_at', 'timestamp'), field('item', 'uuid', { schema: { is_unique: true } }),
+    field('image_url'), field('image_illustrative', 'boolean', { schema: { default_value: false } }), choices('source', ['manual', 'globalbake'], 'manual'), field('erp_synced_at', 'timestamp'), field('item', 'uuid', { schema: { is_unique: true } }),
   ] },
   commerce_customers: { icon: 'groups', label: 'Clientes', template: '{{name}} · {{company}}', fields: [
     field('name'), field('email'), field('company'), choices('customer_type', ['personal', 'business'], 'personal'),

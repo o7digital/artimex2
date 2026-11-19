@@ -2,7 +2,7 @@ import { products, type Locale } from './content';
 
 export type CustomerType = 'personal' | 'business';
 export type Cart = Record<string, number>;
-export type ShopProduct = { id: string; name: string; description: string; type: string; image: string; thumbnail: string; kind: string; demoPriceCents: number; category?: string; unitsPerCase?: number; priceAvailable?: boolean; enabledB2c?: boolean; enabledB2b?: boolean; stockQuantity?: number | null };
+export type ShopProduct = { id: string; name: string; description: string; type: string; image: string; thumbnail: string; kind: string; demoPriceCents: number; category?: string; unitsPerCase?: number; priceAvailable?: boolean; enabledB2c?: boolean; enabledB2b?: boolean; stockQuantity?: number | null; imageIllustrative?: boolean };
 export const shopPaths = { en: '/en/shop/', es: '/es/tienda/' };
 export const cartKey = (type: CustomerType) => `artimex-shop-preview-v1-${type}`;
 // Demonstration merchandising only. Replace with validated ERP SKU/price/pack data.
@@ -16,7 +16,7 @@ export function catalogProducts(value: unknown, locale: Locale): ShopProduct[] {
     if (!row || typeof row.id !== 'string' || typeof row.name_es !== 'string' && typeof row.name_en !== 'string') return [];
     const image = typeof row.image_url === 'string' && /^https:\/\//.test(row.image_url) ? row.image_url : '/favicon.svg';
     const priceAvailable = Number.isSafeInteger(row.price_cents) && row.price_cents >= 0;
-    return [{ id: row.id, name: row[`name_${locale}`] || row.name_es || row.name_en, description: row[`description_${locale}`] || '', type: row.category === 'savory' ? 'savory' : 'sweet', image, thumbnail: image, kind: row.category === 'savory' ? 'PAN SALADO' : 'PAN DULCE', demoPriceCents: priceAvailable ? row.price_cents : 0, priceAvailable, category: row.category, unitsPerCase: Number.isInteger(row.units_per_case) && row.units_per_case > 0 ? row.units_per_case : undefined, enabledB2c: row.enabled_b2c === true, enabledB2b: row.enabled_b2b === true, stockQuantity: row.stock_quantity }];
+    return [{ id: row.id, name: row[`name_${locale}`] || row.name_es || row.name_en, description: row[`description_${locale}`] || '', type: row.category === 'savory' ? 'savory' : 'sweet', image, thumbnail: image, kind: row.category === 'savory' ? locale === 'es' ? 'PAN SALADO' : 'SAVORY BREAD' : locale === 'es' ? 'PAN DULCE' : 'SWEET BREAD', demoPriceCents: priceAvailable ? row.price_cents : 0, priceAvailable, category: row.category, unitsPerCase: Number.isInteger(row.units_per_case) && row.units_per_case > 0 ? row.units_per_case : undefined, enabledB2c: row.enabled_b2c === true, enabledB2b: row.enabled_b2b === true, stockQuantity: row.stock_quantity, imageIllustrative: row.image_illustrative === true }];
   });
 }
 export const canSelectProduct = (product: ShopProduct, type: CustomerType) => product.stockQuantity !== 0 && (type === 'business' ? product.enabledB2b === undefined || product.enabledB2b && Number.isInteger(product.unitsPerCase) && (product.unitsPerCase ?? 0) > 0 : product.enabledB2c !== false && product.priceAvailable !== false);

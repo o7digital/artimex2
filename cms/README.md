@@ -52,6 +52,23 @@ La boutique charge le catalogue publié au démarrage et utilise les vrais prix 
 
 Après publication, le catalogue du proxy peut être en cache jusqu’à 90 secondes. Recharger la boutique pour actualiser une session déjà ouverte.
 
+### Raccordement de la vitrine au catalogue GB
+
+La collection de la page d’accueil et la boutique de la branche `dev` utilisent désormais le même catalogue publié. Le build charge sa projection publique avec `COMMERCE_STUDIO_URL` : les fiches GB sont présentes dans le HTML initial, puis actualisées côté navigateur. La vitrine de production conserve son contenu approuvé. Un backend indisponible pendant un build configuré empêche ce build de publier silencieusement les anciennes fiches.
+
+Une publication signifie qu’une **fiche peut être consultée**. Elle n’active aucun paiement ou export. Un prix, un conditionnement ou un code GB inconnu reste nul ; aucun prix de démonstration ne remplace une donnée réelle manquante. Les produits sans prix permettent une demande d’information et ne s’ajoutent pas au panier. Les ingrédients et pourcentages ne font partie d’aucune projection publique ; une même liste de champs autorisés est appliquée par le service Studio et par le proxy Vercel. Les anciennes listes génériques d’ingrédients des fenêtres de familles ont également été retirées de la vitrine.
+
+Le fichier mélange produits, matières premières et emballages. La sélection éditoriale de développement prépare **58 références de boulangerie**, liées aux articles ERP existants, avec leurs noms de variantes d’origine. Les recettes, rapports et autres références restent privés. Les photographies existantes réutilisées pour une famille sont identifiées comme illustratives ; une référence sans photo utilise la marque Artimex.
+
+```sh
+# Examiner la sélection, sans écriture :
+railway run --service directus --environment dev -- node cms/prepare-development-catalog.mjs
+# Préparer explicitement les fiches de boulangerie sur dev :
+railway run --service directus --environment dev -- node cms/prepare-development-catalog.mjs --apply
+```
+
+Le périmètre alimentaire élargi est une option explicite `--all-food` ; il ne fait pas partie de la sélection boulangerie par défaut. Le script conserve les noms édités et les prix déjà renseignés. Les futures modifications éditoriales se font depuis le catalogue privé du Studio.
+
 ## XML : ce qui est prêt et ce qui manque
 
 Le Studio affiche les deux flux, les prérequis et la file. Il analyse un exemple XML jusqu’à 1 Mo pour montrer sa racine et ses chemins, sans afficher ses valeurs ni le conserver. DTD/entités externes et profondeur excessive sont refusés. Cette analyse ne vérifie **aucune compatibilité GlobalBake**.

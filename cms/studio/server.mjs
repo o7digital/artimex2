@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { InputError, validateProduct, validateCustomer, readCsv, previewImport, inspectXml, makeOrder, stableId, checksum } from './commerce.mjs';
 import { createErp } from './erp.mjs';
+import { publicProduct, publicProductFields } from './catalog-contract.mjs';
 
 const uuid = /^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}$/i;
 const collections = { products: 'commerce_products', customers: 'commerce_customers', orders: 'commerce_orders', imports: 'commerce_imports', sync: 'commerce_sync_jobs' };
@@ -124,9 +125,9 @@ export function createStudioServer(options = {}) {
       if (path === '/catalog' && req.method === 'GET') {
         if (!config.readToken) throw new InputError('Catálogo no configurado.', 503);
         const filter = encodeURIComponent(JSON.stringify({ status: { _eq: 'published' } }));
-        const result = await api(`/items/commerce_products?filter=${filter}&fields=id,globalbake_sku,name_es,name_en,description_es,description_en,category,price_cents,stock_quantity,units_per_case,enabled_b2c,enabled_b2b,image_url&limit=2001&sort=name_es`, config.readToken);
+        const result = await api(`/items/commerce_products?filter=${filter}&fields=${publicProductFields.join(',')}&limit=2001&sort=name_es`, config.readToken);
         if (result.data.length > 2000) throw new InputError('Catálogo demasiado grande. Configura paginación antes de publicar.', 503);
-        return send(res, { products: result.data, currency: 'USD', checkoutEnabled: false });
+        return send(res, { products: result.data.map(publicProduct).filter(Boolean), currency: 'USD', checkoutEnabled: false });
       }
       if (path === '/api/login' && req.method === 'POST') {
         const ip = String(req.headers['x-railway-client-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress).split(',')[0].trim();
@@ -222,9 +223,9 @@ export function createStudioServer(options = {}) {
               if (name === 'customers' && !({ ...current, ...validated }.name && { ...current, ...validated }.email)) throw new InputError('Nombre y correo son obligatorios.');
               if (name === 'products' && validated.status === 'published') {
                 const combined = { ...current, ...validated };
-                if (!combined.globalbake_sku || (!combined.name_es && !combined.name_en)) throw new InputError('Confirma SKU y nombre antes de publicar.');
-                if (combined.enabled_b2c && combined.price_cents === null) throw new InputError('Confirma el precio B2C antes de publicar.');
-                if (combined.enabled_b2b && !combined.units_per_case) throw new InputError('Confirma las piezas por caja antes de publicar.');
+                // Catalog publication exposes a product sheet; it never enables checkout.
+                // Unknown prices and pack sizes stay null and prevent cart selection.
+                if (!combined.name_es && !combined.name_en) throw new InputError('Confirma el nombre antes de publicar.');
               }
             } else if (validated.status === 'published') throw new InputError('Guarda primero el producto como borrador.');
             return send(res, (await api(`/items/${collection}${id ? `/${id}` : ''}`, token, id ? 'PATCH' : 'POST', id ? validated : { id: randomUUID(), ...validated })).data, id ? 200 : 201);

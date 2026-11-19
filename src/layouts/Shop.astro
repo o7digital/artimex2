@@ -11,10 +11,12 @@ import { shopCopy } from '../data/shopCopy';
 import { privacyPaths } from '../data/privacyNotice';
 import Logo from '../components/Logo.astro';
 import Shop from '../components/Shop';
+import { loadPublicCatalog } from '../data/publicCatalog';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = shopCopy[locale];
 const other = locale === 'en' ? 'es' : 'en';
+const catalog = await loadPublicCatalog(locale);
 ---
 <!doctype html>
 <html lang={locale}>
@@ -30,7 +32,7 @@ const other = locale === 'en' ? 'es' : 'en';
   <body class="shop-page">
     <a class="skip-link" href="#shop-main">{copy[locale].skip}</a>
     <header class="shop-header section-wrap"><a href={`/${locale}/`} aria-label="Artimex Bakery"><Logo eager /></a><nav aria-label={locale === 'es' ? 'Navegación de la tienda' : 'Shop navigation'}><a href={`/${locale}/#order`}>← {t.home}</a><a class="shop-language" href={shopPaths[other]} hreflang={other} lang={other} data-shop-language>{other.toUpperCase()}</a></nav></header>
-    <main class="shop-main section-wrap" id="shop-main"><Shop locale={locale} client:load /><noscript><p>{locale === 'es' ? 'Activa JavaScript para explorar el carrito de demostración. No se procesan pedidos en esta vista previa.' : 'Enable JavaScript to explore the demo shopping bag. No orders are processed in this preview.'}</p></noscript></main>
+    <main class="shop-main section-wrap" id="shop-main"><Shop locale={locale} initialProducts={catalog} client:load /><noscript><p>{locale === 'es' ? 'Activa JavaScript para explorar el carrito de demostración. No se procesan pedidos en esta vista previa.' : 'Enable JavaScript to explore the demo shopping bag. No orders are processed in this preview.'}</p></noscript></main>
     <footer class="shop-footer section-wrap"><span>© {new Date().getFullYear()} Artimex Bakery · {t.preview}</span><nav><a href={privacyPaths[locale]}>{locale === 'es' ? 'Privacidad' : 'Privacy'}</a><a href={`mailto:${brand.email}`}>{brand.email}</a></nav></footer>
   </body>
 </html>

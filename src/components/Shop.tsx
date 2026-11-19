@@ -8,13 +8,13 @@ function Arrow() { return <svg width="22" height="22" viewBox="0 0 24 24" fill="
 function Bag() { return <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7ZM8 8V6a4 4 0 0 1 8 0v2" /></svg>; }
 const readCart = (type: CustomerType, catalog: ShopProduct[]): Cart => { try { return sanitizeCart(JSON.parse(localStorage.getItem(cartKey(type)) || '{}'), catalog.filter(product => canSelectProduct(product, type))); } catch { return {}; } };
 
-export default function Shop({ locale }: { locale: Locale }) {
+export default function Shop({ locale, initialProducts }: { locale: Locale; initialProducts?: ShopProduct[] }) {
   const t = shopCopy[locale];
   const [customerType, setCustomerType] = useState<CustomerType>('personal');
   const [cart, setCart] = useState<Cart>({});
   const [ready, setReady] = useState(false);
-  const [catalog, setCatalog] = useState<ShopProduct[]>(shopProducts(locale));
-  const [connectedCatalog, setConnectedCatalog] = useState(false);
+  const [catalog, setCatalog] = useState<ShopProduct[]>(initialProducts || shopProducts(locale));
+  const [connectedCatalog, setConnectedCatalog] = useState(Boolean(initialProducts));
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
@@ -35,7 +35,7 @@ export default function Shop({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     let cancelled = false;
-    let loadedCatalog = shopProducts(locale);
+    let loadedCatalog = initialProducts || shopProducts(locale);
     const restore = () => { const next = new URLSearchParams(location.search).get('customer') === 'business' ? 'business' : 'personal'; setCustomerType(next); setCart(readCart(next, loadedCatalog)); };
     const load = async () => {
       try {
@@ -84,8 +84,9 @@ export default function Shop({ locale }: { locale: Locale }) {
         <div className="shop-catalog-heading"><h2 id="shop-catalog-title">{t.catalog}</h2><label className="shop-search"><span className="sr-only">{t.search}</span><input type="search" disabled={!ready} value={search} placeholder={t.search} onChange={event => setSearch(event.target.value)} /></label></div>
         <div className="shop-filters" role="group" aria-label={t.catalog}>{[['all', t.all], ['conchas', t.conchas], ['pastries', t.pastries]].map(([value, label]) => <button key={value} type="button" disabled={!ready} aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
         <div className="shop-products">{visibleProducts.map(product => <article className="shop-product" key={product.id}>
-          <div className="shop-product-photo"><img src={product.image} srcSet={`${product.thumbnail} 375w, ${product.image} 750w`} sizes="(max-width:700px) 43vw, (max-width:1100px) 42vw, 27vw" alt={product.name} width="750" height="450" loading="lazy" /><span className="eyebrow">{business ? (product.unitsPerCase ?? (connectedCatalog ? '—' : 12)) + ' / ' + (locale === 'es' ? 'CARTÓN' : 'CASE') : product.kind}</span></div>
-          <div className="shop-product-copy"><h3>{product.name}</h3><p className="shop-product-description">{product.description}</p><div className="shop-product-price"><strong>{business || product.priceAvailable === false ? t.accountPrice : money(product.demoPriceCents)}</strong><span>{business ? connectedCatalog ? `${product.unitsPerCase ?? '—'} ${locale === 'es' ? 'piezas / cartón' : 'pieces / case'}` : t.case : connectedCatalog ? locale === 'es' ? 'por pieza · USD' : 'per piece · USD' : t.piece}</span></div>
+          <div className="shop-product-photo"><img src={product.image} srcSet={`${product.thumbnail} 375w, ${product.image} 750w`} sizes="(max-width:700px) 43vw, (max-width:1100px) 42vw, 27vw" alt={product.name} width="750" height="450" loading="lazy" /><span className="eyebrow">{business ? (product.unitsPerCase ?? (connectedCatalog ? '—' : 12)) + ' / ' + (locale === 'es' ? 'CARTÓN' : 'CASE') : product.kind}</span>{product.imageIllustrative && <span className="shop-image-note">{locale === 'es' ? 'Imagen ilustrativa' : 'Illustrative image'}</span>}{product.image.endsWith('/favicon.svg') && <span className="shop-image-note">{locale === 'es' ? 'Fotografía próximamente' : 'Photo coming soon'}</span>}</div>
+          <div className="shop-product-copy"><h3>{product.name}</h3><p className="shop-product-description">{product.description}</p><div className="shop-product-price"><strong>{product.priceAvailable === false && !business ? locale === 'es' ? 'Precio por confirmar' : 'Price on request' : business ? t.accountPrice : money(product.demoPriceCents)}</strong><span>{business ? connectedCatalog ? product.unitsPerCase ? `${product.unitsPerCase} ${locale === 'es' ? 'piezas / cartón' : 'pieces / case'}` : locale === 'es' ? 'Presentación por confirmar' : 'Pack size to be confirmed' : t.case : connectedCatalog ? product.priceAvailable === false ? locale === 'es' ? 'Consulta disponibilidad y presentaciones' : 'Ask about availability and pack sizes' : locale === 'es' ? 'por pieza · USD' : 'per piece · USD' : t.piece}</span></div>
+          {product.priceAvailable === false && <a className="shop-inquire" href={`mailto:sales@artimex.com?subject=${encodeURIComponent(`${locale === 'es' ? 'Consulta' : 'Product enquiry'}: ${product.name}`)}`}>{locale === 'es' ? 'Consultar este producto' : 'Ask about this product'}</a>}
           <button className="shop-add" type="button" disabled={!ready || !canSelectProduct(product, customerType) || connectedCatalog && business && !product.unitsPerCase || (cart[product.id] || 0) >= 99} onClick={() => { changeQuantity(product.id, 1); setStatus(`${product.name}: ${t.added}`); }} aria-label={`${business ? t.addCase : t.add}: ${product.name}`}>{business ? t.addCase : t.add}<span aria-hidden="true">+</span></button></div>
         </article>)}</div>
         {!visibleProducts.length && <div className="shop-no-results"><p>{t.noResults}</p><button className="text-link" onClick={() => { setSearch(''); setFilter('all'); }}>{t.reset}</button></div>}
