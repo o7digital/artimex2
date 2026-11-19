@@ -71,7 +71,7 @@ async function render() {
 }
 async function overview(id) {
   const [data, erp] = await Promise.all([api('/api/overview'), api('/api/erp/overview')]); if (id !== state.renderId) return;
-  $('#page').innerHTML = header('TU PANADERÍA, CONECTADA', `Bienvenido, ${esc(state.user.name)}.`, 'El mismo cuidado de siempre, en cada detalle de tu negocio.', '<a class="button gold" href="#products">Ver productos</a>') +
+  $('#page').innerHTML = header('TU PANADERÍA, CONECTADA', `Bienvenido, ${esc(state.user.name)}.`, 'El mismo cuidado de siempre, en cada detalle de tu negocio.', '<a class="button gold" href="#items">Ver referencial</a>') +
     erpViews.stats(erp) + erpViews.charts(erp) +
     `<div class="grid-two"><article class="panel intro-card">${icon('imports')}<p class="eyebrow">TODO EMPIEZA CON TUS PRODUCTOS</p><h2>Tu catálogo.<br>Con su propia historia.</h2><p>Importa el CSV de GlobalBake, revisa las columnas y prepara cada producto para tu tienda.</p><a class="button" href="#imports">Importar mi catálogo</a></article><article class="panel intro-card">${icon('sync')}<p class="eyebrow">EL SIGUIENTE PASO</p><h2>Un negocio.<br>Todo conectado.</h2><p>Catálogo y existencias de entrada. Pedidos de salida. Prepara la conexión XML con tu equipo GlobalBake.</p><a class="button" href="#sync">Ver los intercambios</a></article></div>` +
     notice('<p><strong>Estás en tu espacio de desarrollo.</strong> Puedes preparar el catálogo y registrar borradores. El pago y el envío de pedidos a GlobalBake todavía no están habilitados.</p>') +
