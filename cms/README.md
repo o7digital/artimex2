@@ -17,6 +17,8 @@ Seule l’adresse `STUDIO_ADMIN_EMAIL`, ou un rôle explicitement désigné par 
 
 ## Données et fonctionnalités installées
 
+Le Studio possède également un **référentiel ERP privé partagé**, avec les articles, composants et formulations extraits du rapport Excel GlobalBake. Les variantes et les pourcentages d’origine sont conservés. Les fiches commerciales peuvent référencer les mêmes articles sans exposer les recettes. Voir [le modèle ERP, l’import réel et ses limites](erp.md).
+
 | Collection | Utilisation |
 | --- | --- |
 | `commerce_products` | SKU ERP unique, noms/descriptions ES/EN, catégorie, photo HTTPS, prix par pièce en cents USD, stock en pièces, conditionnement, canaux B2C/B2B, état et provenance |

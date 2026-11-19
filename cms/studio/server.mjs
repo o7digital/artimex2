@@ -3,6 +3,7 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID }
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { InputError, validateProduct, validateCustomer, readCsv, previewImport, inspectXml, makeOrder, stableId, checksum } from './commerce.mjs';
+import { createErp } from './erp.mjs';
 
 const uuid = /^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}$/i;
 const collections = { products: 'commerce_products', customers: 'commerce_customers', orders: 'commerce_orders', imports: 'commerce_imports', sync: 'commerce_sync_jobs' };
@@ -42,8 +43,8 @@ export function createStudioServer(options = {}) {
   }
   async function api(path, token, method = 'GET', data) {
     const response = await config.fetch(config.cms.replace(/\/$/, '') + path, {
-      method, headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(data === undefined ? {} : { 'Content-Type': 'application/json' }) },
-      body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(30000), redirect: 'error',
+      method, headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(data === undefined || data instanceof FormData ? {} : { 'Content-Type': 'application/json' }) },
+      body: data === undefined ? undefined : data instanceof FormData ? data : JSON.stringify(data), signal: AbortSignal.timeout(30000), redirect: 'error',
     });
     const payload = response.status === 204 ? null : await response.json().catch(() => null);
     if (!response.ok) {
@@ -52,6 +53,7 @@ export function createStudioServer(options = {}) {
     }
     return payload;
   }
+  const erp = createErp({ api });
   const owner = profile => profile?.email?.toLowerCase() === config.adminEmail.toLowerCase() || (config.editorRole && (profile?.role?.id || profile?.role) === config.editorRole);
   async function authenticate(req, res) {
     const s = session(req);
@@ -150,6 +152,7 @@ export function createStudioServer(options = {}) {
       }
       if (path.startsWith('/api/')) {
         const s = await authenticate(req, res), token = s.access;
+        if (path.startsWith('/api/erp/')) return send(res, await erp.handle(path, req.method, url, token, ['POST', 'PATCH'].includes(req.method) ? await body(req) : undefined));
         if (path === '/api/me' && req.method === 'GET') return send(res, { name: s.profile.first_name || 'Olivier', email: s.profile.email, preview: config.preview, directus: config.cmsPublic || config.cms, environment: 'dev' });
         if (path === '/api/overview' && req.method === 'GET') {
           const [products, customers, orders, imports] = await Promise.all([
@@ -237,7 +240,7 @@ export function createStudioServer(options = {}) {
         throw new InputError('Ruta no encontrada.', 404);
       }
       if (!['GET', 'HEAD'].includes(req.method)) throw new InputError('Ruta no encontrada.', 404);
-      const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'], '/logo.png': ['logo.png', 'image/png'], '/bakery.webp': ['bakery.webp', 'image/webp'], '/sans.woff2': ['sans.woff2', 'font/woff2'], '/serif.woff2': ['serif.woff2', 'font/woff2'] };
+      const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/erp.js': ['erp.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'], '/logo.png': ['logo.png', 'image/png'], '/bakery.webp': ['bakery.webp', 'image/webp'], '/sans.woff2': ['sans.woff2', 'font/woff2'], '/serif.woff2': ['serif.woff2', 'font/woff2'] };
       if (!files[path]) throw new InputError('Ruta no encontrada.', 404);
       const [file, type] = files[path];
       const bytes = await readFile(new URL(`./public/${file}`, import.meta.url));

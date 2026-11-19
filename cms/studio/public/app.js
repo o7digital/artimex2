@@ -1,3 +1,4 @@
+import { createErpViews } from '/erp.js';
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const money = value => value === null || value === undefined ? 'Por confirmar' : new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' }).format(value / 100);
@@ -14,11 +15,11 @@ const paths = {
   settings: '<circle cx="12" cy="12" r="3"/><path d="m10 3-1 3-3 1-3 3v4l3 3 3 1 1 3h4l1-3 3-1 3-3v-4l-3-3-3-1-1-3h-4Z"/>',
 };
 const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.overview}</svg>`;
-const nav = [['overview', 'Resumen'], ['products', 'Productos'], ['customers', 'Clientes'], ['orders', 'Pedidos'], ['imports', 'Importar GlobalBake'], ['sync', 'Intercambios XML'], ['settings', 'Mi espacio']];
+const nav = [['overview', 'Resumen'], ['items', 'Referencial ERP'], ['recipes', 'Formulaciones'], ['workbook', 'Importar formulaciones'], ['products', 'Catálogo de la tienda'], ['customers', 'Clientes'], ['orders', 'Pedidos'], ['imports', 'Importar catálogo CSV'], ['sync', 'Intercambios XML'], ['settings', 'Mi espacio']];
 const state = { user: null, import: null, jobTimer: null, renderId: 0 };
 let toastTimer;
 function toast(message) { $('#toast').textContent = message; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 6000); }
-function showLogin() { state.user = null; $('#studio-view').hidden = true; $('#login-view').hidden = false; clearTimeout(state.jobTimer); }
+function showLogin() { state.user = null; state.import = null; state.renderId++; $('#studio-view').hidden = true; $('#login-view').hidden = false; $('#editor').close(); $('#editor-body').replaceChildren(); $('#page').replaceChildren(); clearTimeout(state.jobTimer); }
 async function api(path, method = 'GET', data) {
   const response = await fetch(path, { method, headers: data === undefined ? {} : { 'Content-Type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), credentials: 'same-origin' });
   const result = await response.json();
@@ -61,6 +62,7 @@ async function render() {
   $('#page').innerHTML = '<p class="loading" role="status">Cargando tu espacio…</p>';
   try {
     if (selected[0] === 'overview') await overview(id);
+    else if (['items', 'recipes', 'workbook'].includes(selected[0])) await erpViews.render(selected[0], id);
     else if (['products', 'customers', 'orders'].includes(selected[0])) await list(selected[0], 1, '', id);
     else if (selected[0] === 'imports') await imports(id);
     else if (selected[0] === 'sync') await sync(id);
@@ -68,12 +70,13 @@ async function render() {
   } catch (error) { if (id === state.renderId) $('#page').innerHTML = notice(`<p>${esc(error.message)}</p><button class="button" id="retry">Reintentar</button>`); $('#retry')?.addEventListener('click', render); }
 }
 async function overview(id) {
-  const data = await api('/api/overview'); if (id !== state.renderId) return;
+  const [data, erp] = await Promise.all([api('/api/overview'), api('/api/erp/overview')]); if (id !== state.renderId) return;
   $('#page').innerHTML = header('TU PANADERÍA, CONECTADA', `Bienvenido, ${esc(state.user.name)}.`, 'El mismo cuidado de siempre, en cada detalle de tu negocio.', '<a class="button gold" href="#products">Ver productos</a>') +
-    `<div class="stats">${[[data.products, 'Productos', 'En tu catálogo'], [data.published, 'Publicados', 'Disponibles en la API'], [data.customers, 'Clientes', 'Particulares y profesionales'], [data.orders, 'Pedidos', 'Borradores registrados']].map(([count, label, note]) => `<article class="stat"><span>${label}</span><strong>${count}</strong><small>${note}</small></article>`).join('')}</div>` +
+    erpViews.stats(erp) + erpViews.charts(erp) +
     `<div class="grid-two"><article class="panel intro-card">${icon('imports')}<p class="eyebrow">TODO EMPIEZA CON TUS PRODUCTOS</p><h2>Tu catálogo.<br>Con su propia historia.</h2><p>Importa el CSV de GlobalBake, revisa las columnas y prepara cada producto para tu tienda.</p><a class="button" href="#imports">Importar mi catálogo</a></article><article class="panel intro-card">${icon('sync')}<p class="eyebrow">EL SIGUIENTE PASO</p><h2>Un negocio.<br>Todo conectado.</h2><p>Catálogo y existencias de entrada. Pedidos de salida. Prepara la conexión XML con tu equipo GlobalBake.</p><a class="button" href="#sync">Ver los intercambios</a></article></div>` +
     notice('<p><strong>Estás en tu espacio de desarrollo.</strong> Puedes preparar el catálogo y registrar borradores. El pago y el envío de pedidos a GlobalBake todavía no están habilitados.</p>') +
-    `<section class="panel"><div class="panel-header"><div><h2>Últimas importaciones</h2><p>El recorrido de tu catálogo.</p></div><a class="text-button" href="#imports">Ver importaciones</a></div>${data.imports.length ? importTable(data.imports) : empty('Un nuevo comienzo.', 'Cuando importes tu primer archivo, su resultado aparecerá aquí.')}</section>`;
+    `<section class="panel"><div class="panel-header"><div><h2>Tu tienda y tus clientes</h2><p>${data.products} fichas de catálogo · ${data.published} publicadas · ${data.customers} clientes · ${data.orders} borradores</p></div><a class="text-button" href="#items">Explorar el referencial ERP</a></div>${erp.imports.length ? `<div class="panel-content"><p>Última fuente: ${esc(erp.imports[0].filename)} · ${date(erp.imports[0].date_created)}</p><a class="text-button" href="#recipes">Explorar las formulaciones privadas</a></div>` : empty('Un nuevo comienzo.', 'Importa tu informe para construir el referencial compartido.', '<a class="button" href="#workbook">Importar informe GB</a>')}</section>`;
+  erpViews.bindCharts();
 }
 const listMeta = {
   products: ['TU COLECCIÓN', 'El pan que nos une.', 'Cuida cada ficha, su presentación y su disponibilidad.', 'Nuevo producto'],
@@ -204,4 +207,5 @@ async function sync(id) {
 function settings() {
   $('#page').innerHTML = header('UN ESPACIO PARA CUIDAR LO NUESTRO', 'Tu Artimex Studio.', 'El punto de encuentro entre tu panadería y lo que viene.') + `<section class="panel"><div class="panel-header"><h2>Tu acceso</h2></div><div class="panel-content"><p><strong>${esc(state.user.name)}</strong></p><p>${esc(state.user.email)}</p><p>Entorno: desarrollo · Sitio conectado: vista previa.</p><div class="form-actions"><a class="button" href="${esc(state.user.preview)}/en/shop/" target="_blank" rel="noopener">Abrir mi tienda</a><a class="button" href="${esc(state.user.directus)}/admin/" target="_blank" rel="noopener">Abrir Directus</a></div></div></section>` + notice('<p>Los productos, clientes y borradores se guardan en tu base privada. Publicar una ficha la hace disponible en la API del catálogo; no activa pagos ni envía pedidos a GlobalBake.</p>');
 }
+const erpViews = createErpViews({ api, esc, badge, header, empty, notice, table, dialog, select, input, toast, state, date, render });
 initialize();

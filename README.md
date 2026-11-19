@@ -33,6 +33,8 @@ The existing site had no backend, checkout, analytics or external service integr
 
 Directus, PostgreSQL and Artimex Commerce Studio are deployed to the dedicated Railway `dev` environment. The Studio manages products, customers, draft orders and reviewed GlobalBake CSV imports. Published products feed the Vercel preview catalog; checkout remains a simulation. XML import/export is prepared but awaits the client's accepted XML contract and test access. See [the backend guide](cms/README.md) and [GlobalBake integration](docs/globalbake-integration.md).
 
+The private [shared ERP referential](cms/erp.md) preserves GlobalBake report items, reusable components, source recipe variants and their original percentages. Commercial listings reference that master by ID; recipes and source workbooks remain private. The Studio includes source-based charts, search and reviewed XLSX imports.
+
 ## Hosting and tests
 
 Vercel builds the static website into `dist/`. Publish preview deployments with `vercel deploy --target preview`; production is a separate action after review.

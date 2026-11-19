@@ -17,6 +17,8 @@ test('private Studio isolates tokens, rejects cross-origin writes and authentica
   t.after(() => new Promise(resolve => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
   let response = await fetch(base + '/api/products'); assert.equal(response.status, 401);
+  response = await fetch(base + '/api/erp/items'); assert.equal(response.status, 401);
+  response = await fetch(base + '/api/erp/recipes'); assert.equal(response.status, 401);
   response = await fetch(base + '/api/login', { method: 'POST', headers: { Origin: 'https://attacker.test', 'Content-Type': 'application/json' }, body: '{}' }); assert.equal(response.status, 403); assert.equal(calls.length, 0);
   response = await fetch(base + '/api/login', { method: 'POST', headers: { Origin: 'http://studio.test', 'Content-Type': 'text/plain' }, body: '{}' }); assert.equal(response.status, 415);
   response = await fetch(base + '/api/login', { method: 'POST', headers: { Origin: 'http://studio.test', 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'owner@example.com', password: 'secret' }) });
@@ -27,6 +29,8 @@ test('private Studio isolates tokens, rejects cross-origin writes and authentica
   assert(!JSON.stringify(await response.json()).includes('private-'));
   response = await fetch(base + '/api/me', { headers: { Cookie: cookie } }); assert.equal(response.status, 200);
   response = await fetch(base + '/api/products', { headers: { Cookie: cookie } }); assert.equal(response.status, 200);
+  response = await fetch(base + '/api/erp/items', { headers: { Cookie: cookie } }); assert.equal(response.status, 200);
+  response = await fetch(base + '/api/erp/items/00000000-0000-4000-a000-000000000001', { method: 'PATCH', headers: { Cookie: cookie, Origin: 'http://studio.test', 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'overwrite source', recipe: 'private' }) }); assert.equal(response.status, 400);
   response = await fetch(base + '/api/products', { method: 'POST', headers: { Cookie: cookie, Origin: 'http://studio.test', 'Content-Type': 'application/json' }, body: JSON.stringify({ name_es: 'X', source: 'malicious' }) }); assert.equal(response.status, 400);
   response = await fetch(base + '/api/orders', { method: 'POST', headers: { Cookie: cookie, Origin: 'http://studio.test', 'Content-Type': 'application/json' }, body: JSON.stringify({ payment_status: 'paid' }) }); assert.equal(response.status, 400);
   const profiles = calls.filter(call => call.url.includes('/users/me')); assert(profiles.length >= 4);

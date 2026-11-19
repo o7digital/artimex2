@@ -1,5 +1,6 @@
 // Additive and repeatable. Run only with the Artimex Railway dev service variables.
 import { randomUUID } from 'node:crypto';
+import { createErpModel } from './erp-model.mjs';
 const url = process.env.PUBLIC_URL || process.env.DIRECTUS_URL;
 const token = process.env.ADMIN_TOKEN;
 if (process.env.CMS_ENVIRONMENT !== 'dev' || !url || !token || !process.env.STOREFRONT_READ_TOKEN) throw new Error('Use Artimex dev variables: CMS_ENVIRONMENT, PUBLIC_URL, ADMIN_TOKEN, STOREFRONT_READ_TOKEN.');
@@ -26,7 +27,7 @@ const definitions = {
     choices('status', ['draft', 'published', 'archived'], 'draft'), choices('category', ['conchas', 'pastries', 'savory', 'other'], 'other'),
     count('price_cents'), count('stock_quantity'), count('units_per_case'),
     field('enabled_b2c', 'boolean', { schema: { default_value: false } }), field('enabled_b2b', 'boolean', { schema: { default_value: false } }),
-    field('image_url'), choices('source', ['manual', 'globalbake'], 'manual'), field('erp_synced_at', 'timestamp'),
+    field('image_url'), choices('source', ['manual', 'globalbake'], 'manual'), field('erp_synced_at', 'timestamp'), field('item', 'uuid', { schema: { is_unique: true } }),
   ] },
   commerce_customers: { icon: 'groups', label: 'Clientes', template: '{{name}} · {{company}}', fields: [
     field('name'), field('email'), field('company'), choices('customer_type', ['personal', 'business'], 'personal'),
@@ -54,6 +55,8 @@ const definitions = {
     field('order', 'uuid'), count('attempts', 0), field('payload', 'json'), field('last_error', 'text'), field('external_reference'), field('acknowledged_at', 'timestamp'),
   ] },
 };
+const erpModel = createErpModel({ field, choices, count, unique });
+Object.assign(definitions, erpModel.definitions);
 const existing = await api('/collections');
 for (const [name, definition] of Object.entries(definitions)) {
   if (!existing.some(row => row.collection === name)) {
@@ -73,6 +76,7 @@ const relationships = [
   ['commerce_order_lines', 'product', 'commerce_products'],
   ['commerce_order_lines', 'order', 'commerce_orders', 'lines'],
   ['commerce_sync_jobs', 'order', 'commerce_orders', 'sync_jobs'],
+  ...erpModel.relationships,
 ];
 const relations = await api('/relations');
 for (const [collection, name, related, alias] of relationships) {
