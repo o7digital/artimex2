@@ -1,6 +1,8 @@
-# Référentiel commun Artimex : boutique et futur ERP
+# Artimex O7 : socle métier commun, boutique et futur ERP
 
 Le référentiel métier est désormais indépendant de la boutique et des identifiants GlobalBake. `erp_items` identifie un article une seule fois ; les formulations et leurs composants utilisent ces mêmes identifiants. Une fiche commerciale `commerce_products` peut pointer vers cet article par une relation unique `item`, sans exposer ses recettes.
+
+Direction retenue : **ce même backend est le socle d’ERP Artimex O7**. Les futurs rapports, données BI et informations métier utiles à la migration doivent se rattacher à ce référentiel et conserver leur provenance, leur période et leurs unités. Il ne faut pas recréer un second catalogue ou une seconde identité produit pour le reporting ou pour le futur ERP. Les indicateurs actuels portent sur les données réellement importées ; les analyses de ventes, marges, achats, stocks et production nécessiteront leurs sources et règles métier propres. Les recettes et les données BI internes restent dans l’espace privé ; la boutique ne reçoit que sa projection commerciale autorisée.
 
 ```mermaid
 flowchart LR
