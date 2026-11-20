@@ -9,7 +9,7 @@ Backend de développement sur Railway, avec PostgreSQL 18, Directus 12.6.1 et un
 
 ## Accès et interface
 
-Le Studio reprend le principe de Nathalie Studio : connexion privée, navigation latérale, tableau de bord et formulaires dédiés. L’identité visuelle reprend Artimex : vert profond, laiton, typographie éditoriale et photo de boulangerie existante. L’interface est en espagnol ; les produits sont éditables en espagnol et en anglais.
+Le Studio reprend le principe de Nathalie Studio : connexion privée, navigation latérale, tableau de bord et formulaires dédiés. L’identité visuelle reprend Artimex : vert profond, laiton, typographie éditoriale et photo de boulangerie existante. L’interface s’ouvre en anglais par défaut, avec un sélecteur **English / Español** sur la connexion et dans l’espace connecté. Le choix est mémorisé dans ce navigateur et conserve la section active et la session. `?lang=en` ou `?lang=es` permet également un choix explicite. Les produits restent éditables en espagnol et en anglais ; changer la langue de l’interface ne traduit ni ne modifie les données GlobalBake, les codes ou les pourcentages enregistrés. Directus utilise aussi l’anglais par défaut et propose les noms de collections dans les deux langues.
 
 Le compte initial utilise l’adresse `ADMIN_EMAIL` de Directus. Son mot de passe initial est conservé dans **Railway → environnement dev → service directus → Variables → ADMIN_PASSWORD**. Ne pas copier les mots de passe ou jetons dans Git, les captures ou les journaux. Après un changement de mot de passe dans Directus, cette variable initiale ne met pas à jour le compte existant.
 

@@ -241,7 +241,7 @@ export function createStudioServer(options = {}) {
         throw new InputError('Ruta no encontrada.', 404);
       }
       if (!['GET', 'HEAD'].includes(req.method)) throw new InputError('Ruta no encontrada.', 404);
-      const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/erp.js': ['erp.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'], '/logo.png': ['logo.png', 'image/png'], '/bakery.webp': ['bakery.webp', 'image/webp'], '/sans.woff2': ['sans.woff2', 'font/woff2'], '/serif.woff2': ['serif.woff2', 'font/woff2'] };
+      const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/erp.js': ['erp.js', 'text/javascript'], '/i18n.js': ['i18n.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'], '/logo.png': ['logo.png', 'image/png'], '/bakery.webp': ['bakery.webp', 'image/webp'], '/sans.woff2': ['sans.woff2', 'font/woff2'], '/serif.woff2': ['serif.woff2', 'font/woff2'] };
       if (!files[path]) throw new InputError('Ruta no encontrada.', 404);
       const [file, type] = files[path];
       const bytes = await readFile(new URL(`./public/${file}`, import.meta.url));

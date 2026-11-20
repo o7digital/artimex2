@@ -57,12 +57,24 @@ const definitions = {
 };
 const erpModel = createErpModel({ field, choices, count, unique });
 Object.assign(definitions, erpModel.definitions);
+const englishLabels = {
+  commerce_products: 'Products', commerce_customers: 'Customers', commerce_orders: 'Orders',
+  commerce_order_lines: 'Order lines', commerce_imports: 'GlobalBake imports', commerce_sync_jobs: 'GlobalBake exchanges',
+  erp_imports: 'ERP sources', erp_items: 'Artimex item registry', erp_recipes: 'Formulations',
+  erp_recipe_lines: 'Formulation components', erp_recipe_sources: 'Formulation traceability',
+};
 const existing = await api('/collections');
 for (const [name, definition] of Object.entries(definitions)) {
-  if (!existing.some(row => row.collection === name)) {
-    await api('/collections', 'POST', { collection: name, schema: {}, meta: { icon: definition.icon, display_template: definition.template, translations: [{ language: 'es-ES', translation: definition.label }] }, fields: [id(), created(), updated(), ...definition.fields] });
+  const currentCollection = existing.find(row => row.collection === name);
+  const translations = [
+    ...(currentCollection?.meta?.translations || []).filter(row => !['en-US', 'es-ES'].includes(row.language)),
+    { language: 'en-US', translation: englishLabels[name] }, { language: 'es-ES', translation: definition.label },
+  ];
+  if (!currentCollection) {
+    await api('/collections', 'POST', { collection: name, schema: {}, meta: { icon: definition.icon, display_template: definition.template, translations }, fields: [id(), created(), updated(), ...definition.fields] });
     console.log('Created', name);
   } else {
+    if (JSON.stringify(currentCollection.meta?.translations) !== JSON.stringify(translations)) await api(`/collections/${name}`, 'PATCH', { meta: { translations } });
     const fields = await api(`/fields/${name}`);
     for (const item of definition.fields) {
       const current = fields.find(row => row.field === item.field);
@@ -86,7 +98,7 @@ for (const [collection, name, related, alias] of relationships) {
   }
   if (!relations.some(row => row.collection === collection && row.field === name)) await api('/relations', 'POST', { collection, field: name, related_collection: related, schema: { on_delete: 'RESTRICT' }, meta: alias ? { one_field: alias, one_deselect_action: 'nullify' } : {} });
 }
-await api('/settings', 'PATCH', { project_name: 'Artimex · Commerce', project_color: '#A57840', default_language: 'es-ES', public_note: 'Espacio privado de desarrollo · Artimex Bakery' });
+await api('/settings', 'PATCH', { project_name: 'Artimex · Commerce', project_color: '#A57840', default_language: 'en-US', public_note: 'Private development workspace · Artimex Bakery' });
 const policies = await api('/policies?limit=-1');
 let reader = policies.find(row => row.name === 'Artimex storefront reader');
 if (!reader) reader = await api('/policies', 'POST', { name: 'Artimex storefront reader', icon: 'storefront', admin_access: false, app_access: false });
