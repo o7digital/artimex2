@@ -46,23 +46,23 @@ test('login defaults to English and remembers an explicit Spanish choice', async
   const state = await mockApi(page, false);
   await page.goto(base);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.getByRole('button', { name: 'Sign in to Studio' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
   await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'password');
   await language(page).selectOption('es');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.getByRole('button', { name: 'Entrar al Studio' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible();
   await page.goto(base); // No URL override: preference comes from local storage.
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   state.rejectLogin = true;
   await page.getByLabel('Correo electrónico', { exact: true }).fill('owner@example.com');
   await page.getByLabel('Contraseña', { exact: true }).fill('test-password');
-  await page.getByRole('button', { name: 'Entrar al Studio' }).click();
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click();
   await expect(page.locator('#login-error')).toHaveText('Revisa tus credenciales.');
   await language(page).selectOption('en');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await page.getByLabel('Email address', { exact: true }).fill('owner@example.com');
   await page.getByLabel('Password', { exact: true }).fill('test-password');
-  await page.getByRole('button', { name: 'Sign in to Studio' }).click();
+  await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.locator('#login-error')).toHaveText('Check your credentials.');
 });
 
@@ -74,7 +74,7 @@ for (const locale of ['en', 'es']) {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('#navigation a')).toHaveCount(10);
     await expect(page.locator('#preview-link')).toHaveAttribute('href', locale === 'en' ? 'https://preview.test/en/shop/' : 'https://preview.test/es/tienda/');
-    const titles = locale === 'en' ? ['Welcome,', 'Every reference.', 'What makes', 'Preserve.', 'The bread that brings us together.', 'Closer to your customers.', 'What comes next.', 'Every product matters.', 'Your connection to GlobalBake.', 'Your Artimex Studio.'] : ['Bienvenido,', 'Cada referencia.', 'Lo que hace', 'Conservar.', 'El pan que nos une.', 'Cerca de tus clientes.', 'Lo que viene.', 'Cada producto cuenta.', 'El vínculo con GlobalBake.', 'Tu Artimex Studio.'];
+    const titles = locale === 'en' ? ['Operations overview', 'Item registry', 'Product formulations', 'Formulation import', 'Store catalog', 'Customer records', 'Order drafts', 'CSV catalog import', 'GlobalBake data exchange', 'Access and environment'] : ['Resumen de operaciones', 'Referencial de artículos', 'Formulaciones de productos', 'Importación de formulaciones', 'Catálogo de la tienda', 'Registros de clientes', 'Borradores de pedido', 'Importación del catálogo CSV', 'Intercambio de datos GlobalBake', 'Acceso y entorno'];
     const sections = ['overview', 'items', 'recipes', 'workbook', 'products', 'customers', 'orders', 'imports', 'sync', 'settings'];
     for (const [i, section] of sections.entries()) {
       await page.locator(`#navigation a[href="#${section}"]`).click();
@@ -133,15 +133,15 @@ test('changing language keeps the active section and authenticated workspace on 
   await mockApi(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${base}/#products`);
-  await expect(page.locator('#page h1')).toHaveText('The bread that brings us together.');
+  await expect(page.locator('#page h1')).toHaveText('Store catalog');
   await language(page).selectOption('es');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page).toHaveURL(/#products$/);
-  await expect(page.locator('#page h1')).toHaveText('El pan que nos une.');
+  await expect(page.locator('#page h1')).toHaveText('Catálogo de la tienda');
   await expect(language(page)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
   await language(page).selectOption('en');
-  await expect(page.locator('#page h1')).toHaveText('The bread that brings us together.');
+  await expect(page.locator('#page h1')).toHaveText('Store catalog');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('#studio-view')).toBeVisible();
