@@ -146,3 +146,25 @@ test('changing language keeps the active section and authenticated workspace on 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('#studio-view')).toBeVisible();
 });
+
+test('staff sign-in waits for the application and never falls back to a credential URL', async ({ page }) => {
+  const state = await mockApi(page, false);
+  let loadApplication;
+  const applicationReady = new Promise(resolve => { loadApplication = resolve; });
+  await page.route('**/app.js', async route => { await applicationReady; await route.continue(); });
+  try {
+    await page.goto(base, { waitUntil: 'commit' });
+    await page.getByLabel('Email address', { exact: true }).fill('owner@example.com');
+    await page.getByLabel('Password', { exact: true }).fill('test-password');
+    await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeDisabled();
+    await page.getByLabel('Password', { exact: true }).press('Enter');
+    expect(new URL(page.url()).search).toBe('');
+    expect(state.signedIn).toBe(false);
+    loadApplication();
+    await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeEnabled();
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await expect(page.locator('#studio-view')).toBeVisible();
+    expect(new URL(page.url()).search).toBe('');
+    expect(state.signedIn).toBe(true);
+  } finally { loadApplication(); }
+});

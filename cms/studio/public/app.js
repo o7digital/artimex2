@@ -210,4 +210,5 @@ function settings() {
   $('#page').innerHTML = header(t("ADMINISTRACIÓN DEL ESPACIO"), t("Acceso y entorno"), t("Consulta la cuenta conectada, el entorno de trabajo y los accesos administrativos.")) + `<section class="panel"><div class="panel-header"><h2>${t("Cuenta conectada")}</h2></div><div class="panel-content"><p><strong>${esc(state.user.name)}</strong></p><p>${esc(state.user.email)}</p><p>${t("Entorno: desarrollo · Sitio conectado: vista previa.")}</p><div class="form-actions"><a class="button" href="${esc(state.user.preview)}${getLocale() === 'es' ? '/es/tienda/' : '/en/shop/'}" target="_blank" rel="noopener">${t("Abrir vista previa de la tienda")}</a><a class="button" href="${esc(state.user.directus)}/admin/" target="_blank" rel="noopener">${t("Abrir Directus")}</a></div></div></section>` + notice(`<p>${t("Los productos, clientes y borradores se guardan en tu base privada. Publicar una ficha la hace disponible en la API del catálogo; no activa pagos ni envía pedidos a GlobalBake.")}</p>`);
 }
 const erpViews = createErpViews({ api, esc, badge, header, empty, notice, table, dialog, select, input, toast, state, date, render });
-initialize();
+// Wait for the initial session check before allowing a sign-in submission.
+initialize().finally(() => { $('#login-form [type=submit]').disabled = false; });
